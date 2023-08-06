@@ -18,29 +18,8 @@
 </style>
 
 
-			<div class="sale">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-8 offset-sm-2 text-center">
-							<div class="row">
-								<div class="owl-carousel2">
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</nav>
+			
+		
 
 		<div class="breadcrumbs">
 			<div class="container">
@@ -61,7 +40,9 @@
 							<img src="{{ p.images.url }}" class="img-fluid" alt="Free HTML5 Bootstrap 4 Template">
 						</div>
 					</div>
+					
 					<div class="col-sm-4">
+						<form action="{% url 'add_cart' p.id %}" method="POST">
 						<div class="product-desc">
 							<h3>{{p.product_name}}</h3>
 							<p class="price">
@@ -77,21 +58,27 @@
 							</p>
 							<p>{{p.description}}</p>
 							<div class="size-wrap">
-								<div class="block-26 mb-2">
+								<div class="mb-2">
 									<h4>Size</h4>
-				               <ul>
-				                  <li><a href="#">7</a></li>
-				                  <li><a href="#">8</a></li>
-				                  <li><a href="#">9</a></li>
-				               </ul>
+									<select name="color" class="form-control" required>
+										<option value="" disabled selected>Choose</option>
+										{% for v in p.variation_set.colors %}
+										<option value ="{{v.variation_value | lower}}">{{v.variation_value | capfirst}}</option>
+										{% endfor %}
+									</select>
 				            </div>
-				            <div class="block-26 mb-4">
+				            <div class=" mb-4">
 									<h4>Color</h4>
-				               <ul>
-				                  <li style="background-color: black;  color: white;"><a href="#">Black</a></li>
-				                  <li style="  background-color: rgb(15, 236, 81);color: black; "><a href="#">Green</a></li>
-								  <li style="  background-color: rgb(227, 21, 21);color: black; "><a href="#">Red</a></li>
-				               </ul>
+				             
+								
+								<select name="size" class="form-control" required>
+									<option value="" disabled selected>Choose</option>
+									{% for v in p.variation_set.sizes %}
+									<option value ="{{v.variation_value | lower}}">{{v.variation_value | capfirst}}</option>
+								    {% endfor %}
+								</select>
+									
+				            
 				            </div>
 							</div>
                   	<div class="row">
@@ -99,8 +86,10 @@
 							{% if p.stock == 0 or p.stock < 0 %}
 							<h3 class="text-danger">Out of Stock</h>
 							{% else %}
-									<p class="addtocart"><a href="#" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i> Add to Cart</a></p>
-							{% endif %}		
+								{% csrf_token %}
+								<button type="submit" value="Add to Cart" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart">  Add to Cart</i></button>
+							</form>
+							{% endif %}	
 								</div>
 							</div>
 						</div>

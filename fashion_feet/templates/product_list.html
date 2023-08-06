@@ -1,19 +1,58 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+.paginator {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
 
+.page, .prev, .next {
+  padding: 5px 10px;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  margin: 0 5px;
+}
+
+.page:hover, .prev:hover, .next:hover {
+  background-color: #ccc;
+}
+
+.prev, .next {
+  background-color: #f5f5f5;
+}
+.paginator a.active {
+  background-color: #ccc;
+}
+
+.paginator a.disabled {
+  cursor: not-allowed;
+  color: #999;
+  border-color: #999;
+}
+</style>
+<div class="container-fluid" style="height: 30px;"></div>
 		<div class="colorlib-featured">
 			<div class="container">
 				<div class="row">
 					{% for p in products %}
-					<div class="col-md-4">
+					<div class="col-md-4 mt-4">
 						<div class="card card-product-grid text-center">
-							<a href="/view_prod/{{p.id}}" class="img-wrap"><img src="{{p.images.url}}" height="300px" width="200px"> </a>
+							
+							<a href="/view_prod/{{p.id}}" class="img-wrap" style="padding-top: 10px;"><img src="{{p.images.url}}" height="180px" width="180px"> </a>
 							<figcaption class="info-wrap">
 								<a href="/view_prod/{{p.id}}" class="title" style="font-weight: bold; color: black;">{{p.product_name}}</a>
-								<div class="price mt-1" style="color: red; ">Rs. {{p.price}}</div>
+								<div class="price mt-1 mb-2" style="color: red; ">Rs. {{p.price}}</div>
 								<div class="col-sm-12 text-center">
-									<p class="addtocart"><a href="cart.html" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i> Add to Cart</a></p>
+									{% if p.stock == 0 or p.stock < 0 %}
+									<h3 class="addtocart"><a href="" class="text-danger">Out of Stock</a></h3>
+							
+							{% else %}
+									<p class="addtocart"><a href="{% url 'add_cart' p.id %}" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i> Add to Cart</a></p>
+									{% endif %}
 								</div>
+								<a href=""><p>Add to Wishlist</p></a>
 							</figcaption>
 						</div>
 					</div>
@@ -21,6 +60,33 @@
 				</div>
 			</div>
 		</div>
+
+
+	<div class="mb-5">
+		{% if products.has_other_pages %}
+		<div class="paginator mb-5">
+			{% if products.has_previous %}
+			<a href="?page={{ products.previous_page_number }}" class="prev active">Prev</a>
+			{% else %}
+			<a href="#" class="prev disabled">Prev</a>
+			{% endif %}
+			
+			{% for i in products.paginator.page_range %}
+				{% if products.number == i %}
+				<a href="#" class="page">{{ i }}</a>
+				{% else %}
+				<a href="?page={{ i }}" class="page">{{ i }}</a>
+				{% endif %}
+			{% endfor %}
+			
+			{% if products.has_next %}
+			<a href="?page={{ products.next_page_number }}" class="prev active">Next</a>
+			{% else %}
+			<a href="#" class="prev disabled">Next</a>
+			{% endif %}
+		</div>
+		{% endif %}
+	</div>
 
 {% endblock %}	
 

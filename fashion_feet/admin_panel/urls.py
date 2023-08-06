@@ -17,5 +17,9 @@ urlpatterns = [
     path('add_prod', views.add_prod, name='add_prod'),
     path('update_prod/<str:id>', views.update_prod, name='update_prod'),
     path('delete_prod/<str:id>', views.delete_prod, name='delete_prod'),
+    path('admin_variation/', views.admin_variation, name='admin_variation'),
+     path('add_variation', views.add_variation, name='add_variation'),
+    path('update_variation/<str:id>', views.update_variation, name='update_variation'),
+    path('delete_variation/<str:id>', views.delete_variation, name='delete_variation'),
 
 ]

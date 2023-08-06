@@ -23,5 +23,6 @@ urlpatterns = [
     path('dj_admin/', admin.site.urls),
     path('', include('home.urls')),
     path('admin/', include('admin_panel.urls')),
-    path('accounts/', include('accounts.urls'))
+    path('accounts/', include('accounts.urls')),
+    path('cart/', include('cart.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

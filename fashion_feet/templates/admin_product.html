@@ -20,7 +20,6 @@
                         <th>Product_Name</th>
 						<th>Price</th>
                         <th>Image</th>
-						<th>Stock</th>
 						<th>is_available</th>
                         <th>Category</th>
 						<th>Modified Date</th>
@@ -40,7 +39,6 @@
 								No image available
 							{% endif %}
 						</td>
-                        <td>{{i.stock}}</td>
 						<td>{{i.is_available}}</td>
 						<td>{{i.category.category_name}}</td>
 						<td>{{i.modified_date}}</td>
@@ -79,10 +77,6 @@
 						<div class="form-group">
 							<label>Image</label>
 							<input name="images" type="file" id="images" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label>Stock</label>
-							<input name="stock" type="number" class="form-control" required>
 						</div>
 						<div class="form-group">
 							<label>is_available</label>
@@ -138,10 +132,6 @@
 							<input type="file" id="images" name="images">
 						</div>
 						<div class="form-group">
-							<label>Stock</label>
-							<input name="stock" value={{i.stock}} type="number" class="form-control" required>
-						</div>
-						<div class="form-group">
 							<label>is_available</label>
 							<input name="is_available" type="text" value="{{i.is_available}}" class="form-control" required>
 						</div>
@@ -155,7 +145,7 @@
 						</div>
 						<div class="form-group">
 							<label>Created Date</label>
-							<input name="created_date" name="{{i.created_date}}" type="date" class="form-control" required>
+							<input name="created_date" value="{{i.created_date}}" type="date" class="form-control" required>
 						</div>
 					</div>
 					<div class="modal-footer">

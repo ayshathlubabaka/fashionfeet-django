@@ -97,16 +97,19 @@
                                         <button type="button" id="selectedButton" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                             <i class="fa fa-bars"></i>Products
                                         </button>
+                                      
                                         <ul class="dropdown-menu">
                                             <li class="dropdown-submenu">
                                                 <a class="dropdown-item" href="{% url 'product_list' %}" >All Products</a>
                                             </li>
+                                            
                                             <li class="dropdown-submenu">
                                                 <a class="dropdown-item" href="{% url 'men_product_list' %}" >Men</a>
                                             </li>
                                             <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'women_product_list' %}">Women</a>
+                                                <a class="dropdown-item" href="{% url 'women_product_list' %}" >Women</a>
                                             </li>
+                                            
                                             <li class="dropdown-submenu">
                                                 <a class="dropdown-item" href="#">Boys (under 12)</a>
                                             </li>
@@ -114,6 +117,7 @@
                                                 <a class="dropdown-item" href="#">Girls (under 12)</a>
                                             </li>
                                         </ul>
+                                      
                                     </li>
                                     <li><a href="#">Wishlist</a></li>
                                     {% if user.is_authenticated %}
@@ -133,12 +137,36 @@
                                     {% else %}
                                     <li class="float-right"><a href="{% url 'login' %}">Login</a></li>
                                     {% endif %}
-                                    <li class="cart"><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
+                                    
+                                    <li class="cart"><a href="{% url 'cart' %}" ><i class="icon-shopping-cart"></i> Cart[{{cart_count}}]</a></li>
                                   </ul>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="sale">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-8 offset-sm-2 text-center">
+                                <div class="row">
+                                    <div class="owl-carousel2">
+                                        <div class="item">
+                                            <div class="col">
+                                                <h3><a href="{% url 'product_list' %}">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="col">
+                                                <h3><a href="{% url 'product_list' %}">Our biggest sale yet 50% off all summer shoes</a></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
 
                 {% block content %}
 

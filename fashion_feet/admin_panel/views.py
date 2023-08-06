@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from accounts.models import User
-from home.models import Category, Product
+from home.models import Category, Product, Variation
 from django.contrib.auth.models import auth
 from django.contrib import messages
 
@@ -161,7 +161,6 @@ def add_prod(request):
         description = request.POST.get('description')
         price = request.POST.get('price')
         images = request.FILES.get('images')
-        stock = request.POST.get('stock')
         is_available = request.POST.get('is_available')
         category = Category.objects.get(id=request.POST.get('category'))
         created_date = request.POST.get('created_date')
@@ -172,7 +171,6 @@ def add_prod(request):
             description = description,
             price = price,
             images = images,
-            stock = stock,
             is_available = is_available,
             category = category,
             created_date = created_date,
@@ -191,7 +189,6 @@ def update_prod(request, id):
         product_name = request.POST.get('product_name')
         description = request.POST.get('description')
         price = request.POST.get('price')
-        stock = request.POST.get('stock')
         is_available = request.POST.get('is_available')
         category = Category.objects.get(id=request.POST.get('category'))
         created_date = request.POST.get('created_date')
@@ -208,7 +205,6 @@ def update_prod(request, id):
             description = description,
             price = price,
             images = images,
-            stock = stock,
             is_available = is_available,
             category = category,
             created_date = created_date,
@@ -224,4 +220,77 @@ def delete_prod(request, id):
     product = Product.objects.filter(id=id)
     product.delete()
     return redirect('admin_product')
+
+
+def admin_variation(request):
+    product = Product.objects.all()
+    variation = Variation.objects.all()
+    context = {
+        'product':product,
+        'variation': variation
+    }
+    return render(request, 'admin_var.html', context)
+
+def add_variation(request):
+
+    if request.method == 'POST':
+        product = Product.objects.get(id=request.POST.get('product'))
+        variation_category = request.POST.get('variation_category')
+        variation_value = request.POST.get('variation_value')
+        stock = request.POST.get('stock')
+        variant_image = request.FILES.get('variant_image')
+        is_active = request.POST.get('is_active')
+        created_date = request.POST.get('created_date')
+
+        variation = Variation(
+            product = product,
+            variation_category = variation_category,
+            variation_value = variation_value,
+            variant_image = variant_image,
+            stock = stock,
+            is_active =is_active,
+            created_date = created_date,
+        )
+        variation.save()
+        return redirect('admin_variation')
+    
+    return render(request, 'admin_var.html')
+
+def update_variation(request, id):
+
+    variation = Variation.objects.get(id=id)
+
+    if request.method == 'POST':
+        product = Product.objects.get(id=request.POST.get('product'))
+        variation_category = request.POST.get('variation_category')
+        variation_value = request.POST.get('variation_value')
+        variant_image = request.FILES.get('variant_image')
+        stock = request.POST.get('stock')
+        is_active = request.POST.get('is_active')
+        created_date = request.POST.get('created_date')
+
+        if variant_image:
+            variation.variant_image = variant_image
+
+        variation = Variation(
+            id = id,
+            product = product,
+            variation_category = variation_category,
+            variation_value = variation_value,
+            variant_image = variant_image,
+            stock = stock,
+            is_active =is_active,
+            created_date = created_date,
+            )
+        variation.save()
+        return redirect('admin_variation')
+    return render(request, 'admin_var.html')
+
+def delete_variation(request, id):
+    variation = Variation.objects.filter(id=id)
+    variation.delete()
+    return redirect('admin_variation')
+
+
+
 
