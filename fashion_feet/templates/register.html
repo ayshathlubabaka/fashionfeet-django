@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,22 +105,23 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;      
 }
-.forgot-password a {
-  color: #009688;
-  text-decoration: none;
-}
-
-.forgot-password a:hover {
-  text-decoration: underline;
-}
-
   </style>
   <div class="login-page">
     <div class="form">
-        <form method="post" action="{% url 'verify_otp' phone_number %}">
-        {% csrf_token%}
-        <input type="text" name="otp" placeholder="Enter OTP" required>
-        <button type="submit">Verify OTP</button>
+      <form class="login-form" action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <input name="first_name" type="text" class="login__input" placeholder="Firstname">
+        <input name="last_name" type="text" class="login__input" placeholder="Lastname">
+        <input name="email" type="email" class="login__input" placeholder="Email">
+        <input name="phone_number" type="text" class="login__input" placeholder="Phone Number">
+        <input name="password" type="password" class="login__input" placeholder="Password">
+        <input name="confirm_password" type="password" class="login__input" placeholder="Confirm Password">
+        <button>Signup</button>
+        <p class="message">Already registered? <a href="{% url 'login' %}">Login Here</a></p>
+
+        {% if error_message %}
+        <p class="error">{{ error_message }}</p>
+      {% endif %}
       </form>
     </div>
   </div>

@@ -25,11 +25,11 @@ SECRET_KEY = 'django-insecure-ivqf8v2@dv8l05e-ke-gpk*&g!qbw2^i1cos&m%z=(73sg4)6r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.Account'
 
 ALLOWED_HOSTS = []
 
-LOGIN_URL = '/user_login/'
+LOGIN_URL = '/login/'
 
 # Application definition
 
@@ -43,9 +43,6 @@ INSTALLED_APPS = [
     'accounts',
     'admin_panel',
     'home',
-    'rest_framework',
-    'django_otp',
-    'django_otp.plugins.otp_totp',
     'cart',
 ]
 
@@ -60,17 +57,11 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',
 ]
 
-OTP_TOTP_ISSUER = 'accounts'
 
-
-TWILIO_ACCOUNT_SID = 'ACda783bac9580f38f8b81353cf2277968'
-TWILIO_AUTH_TOKEN = 'fc66edc5dcb4f68d7871ec681785f75f'
-TWILIO_PHONE_NUMBER = '+14706192284'
-TWILIO_VERIFY_SERVICE_SID = 'VAb6e81b70e7d21b4608c07eb0dd516a14'
 
 ROOT_URLCONF = 'fashion_feet.urls'
 
-LOGIN_REDIRECT_URL = 'otp_verification'
+
 
 TEMPLATES = [
     {
@@ -154,3 +145,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR:'danger',
+}

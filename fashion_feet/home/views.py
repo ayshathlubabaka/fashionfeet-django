@@ -64,3 +64,16 @@ def view_prod(request, id):
         'in_cart' : in_cart
     }
     return render(request, 'view_prod.html', context)
+
+
+def search(request):
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        if keyword:
+            products = Product.objects.order_by('-created_date').filter(product_name__icontains=keyword)
+            print(products)
+
+    context={
+        'products' : products,
+    }
+    return render(request, 'product_list.html', context)

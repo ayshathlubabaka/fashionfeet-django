@@ -10,6 +10,7 @@ urlpatterns = [
     path('product_list/', views.product_list, name='product_list'),
     path('Women/', views.women_product_list, name='women_product_list'),
     path('view_prod/<str:id>/', views.view_prod, name='view_prod'),
+    path('search/', views.search, name='search'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

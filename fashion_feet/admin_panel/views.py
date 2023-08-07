@@ -1,7 +1,6 @@
-
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
-from accounts.models import User
+from accounts.models import Account
 from home.models import Category, Product, Variation
 from django.contrib.auth.models import auth
 from django.contrib import messages
@@ -10,12 +9,12 @@ from django.contrib import messages
 
 def admin_login(request):
     if request.method == 'POST':
-        phone_number = request.POST['phone_number']
+        email = request.POST['email']
         password = request.POST['password']
 
-        user = auth.authenticate(phone_number=phone_number, password=password)
+        user = auth.authenticate(email=email, password=password)
 
-        if user and user.is_superuser:
+        if user and user.is_admin:
             auth.login(request, user)
             return redirect('admin_dash')
         else:
@@ -30,7 +29,7 @@ def admin_dash(request):
     return render(request, 'admin_dash.html')
 
 def user_manage(request):
-    user = User.objects.filter(is_superuser = False)
+    user = Account.objects.filter(is_admin = False)
     context = {
         'user' : user,
     }
@@ -45,7 +44,7 @@ def add_user(request):
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
         
-        user = User(
+        user = Account(
             first_name = first_name,
             last_name = last_name,
             username = username,
@@ -66,7 +65,7 @@ def update(request, id):
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
 
-        user = User(
+        user = Account(
             id = id,
             first_name = first_name,
             last_name = last_name,
@@ -80,13 +79,13 @@ def update(request, id):
     return render(request, 'user_manage.html')
 
 def delete(request, id):
-    user = User.objects.filter(id=id)
+    user = Account.objects.filter(id=id)
     user.delete()
     return redirect('user_manage')
 
 def change_status(request, id):
     if request.method == 'POST':
-        user = User.objects.get(id=id)
+        user = Account.objects.get(id=id)
         if user.is_active:
             user.is_active = False
         else:

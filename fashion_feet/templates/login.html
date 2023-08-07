@@ -119,11 +119,10 @@ body {
     <div class="form">
       <form class="login-form" action="{% url 'login' %}" method="post">
         {% csrf_token%}
-        <input name="phone_number" type="text" class="login__input" placeholder="Phone Number">
+        <input name="email" type="email" class="login__input" placeholder="email">
         <input name="password" type="password" class="login__input" placeholder="Password">
         <button>login</button>
-        <p class="message">Not registered? <a href="{% url 'signup' %}">Create an account</a></p>
-        <p class="forgot-password"><a href="{% url 'forgot_password' %}">Forgot Password?</a></p>
+        <p class="message">Not registered? <a href="{% url 'register' %}">Create an account</a></p>
       </form>
     </div>
   </div>

@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block content%}
+
+		<div class="breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<p class="bread"><span><a href="index.html">Home</a></span> / <span>Checkout</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="colorlib-product">
+			<div class="container">
+
+				<form action="" method="post" class="">
+					{% csrf_token %}
+
+				<div class="row">
+					<div class="col-lg-6 colorlib-form ">
+					
+							<h2>Billing Details</h2>
+		              	<div class="row">
+			               <div class="col-md-12">
+			                  <div class="form-group">
+			                  	<label for="country">Select Country</label>
+			                     <div class="form-field">
+			                     	<i class="icon icon-arrow-down3"></i>
+			                        <select name="people" id="people" class="form-control">
+				                      	<option value="#">Select country</option>
+				                        <option value="#">India</option>
+				                        <option value="#">Qatar</option>
+				                        <option value="#">UAE</option>
+			                        </select>
+			                     </div>
+			                  </div>
+			               </div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="fname">First Name</label>
+										<input type="text" id="fname" class="form-control" placeholder="Your firstname" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="lname">Last Name</label>
+										<input type="text" id="lname" class="form-control" placeholder="Your lastname" required>
+									</div>
+								</div>
+
+			               <div class="col-md-12">
+									<div class="form-group">
+										<label for="fname">Address</label>
+			                    	<input type="text" id="address" class="form-control" placeholder="Enter Your Address" required>
+			                  </div>
+			                  <div class="form-group">
+			                    	<input type="text" id="address2" class="form-control" placeholder="Second Address">
+			                  </div>
+			               </div>
+			            
+			               <div class="col-md-12">
+									<div class="form-group">
+										<label for="companyname">Town/City</label>
+			                    	<input type="text" id="towncity" class="form-control" placeholder="Town or City" required>
+			                  </div>
+			               </div>
+			            
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="stateprovince">State/Province</label>
+										<input type="text" id="fname" class="form-control" placeholder="State Province" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="lname">Zip/Postal Code</label>
+										<input type="text" id="zippostalcode" class="form-control" placeholder="Zip / Postal" required>
+									</div>
+								</div>
+							
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="email">E-mail Address</label>
+										<input type="text" id="email" class="form-control" placeholder="State Province" required>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="Phone">Phone Number</label>
+										<input type="text" id="zippostalcode" class="form-control" placeholder="" required>
+									</div>
+								</div>
+
+								
+		               </div>
+		            
+					</div>
+
+					<div class="col-lg-6">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="cart-detail">
+									<h2>Cart Total</h2>
+									<table class="table">
+										<thead>
+										  <tr>
+											<th class="col-3">Product</th>
+											<th class="col-3"></th>
+											<th class="col-3">Quantity</th>
+											<th class="col-3">Price</th>
+											
+										  </tr>
+										</thead>
+										<tbody>
+											{% for c in cart_items %}
+											<tr>
+											  <td class="col-3"><img src="{{ c.product.images.url }}" alt="{{ c.product }}" width="50"></td>
+											  <td class="col-3"> {{c.product}}<br>Rs {{c.product.price}}</td>
+											  <td class="col-3 text-center">{{c.quantity}}</td>
+											  <td class="col-3">Rs.{{c.sub_total}}</td>
+											  
+											</tr>
+										  {% endfor %}
+										</tbody>
+									  </table>
+								</div>
+						   </div>
+
+						   <div class="w-100"></div>
+
+						   <div class="col-md-12">
+							<div class="total-wrap">
+								<div class="row">
+									
+									<div class="col-sm-12 text-center">
+										<div class="total">
+											<div class="sub">
+												<p><span>Subtotal:</span> <span>Rs. {{total}}</span></p>
+												<p><span>Delivery:</span> <span>Rs. {{delivery_charge}}</span></p>
+												<p><span>Discount:</span> <span>Rs. {{discount}}</span></p>
+											</div>
+											<div class="grand-total">
+												<p><span><strong>Total:</strong></span> <span>Rs. {{grand_total}}</span></p>
+											</div>
+										</div>
+										<div class="container-fluid mb-3"></div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+
+						   <div class="col-md-12">
+								<div class="cart-detail">
+									<h2>Payment Method</h2>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="radio">
+											   <label><input type="radio" name="optradio"> Cash on Delivery</label>
+											</div>
+										</div>
+									</div>
+									<div class="container-fluid text-center">
+										<input type="submit" class="btn btn-primary" value="Place an order &rarr; ">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 text-center">
+						<a href="/product_list" class="btn" style="background-color: #88c8bc; color: aliceblue;"> &#8592; Continue Shopping</a>
+					</div>
+				</div>
+					</div>
+				</div>
+			</form>
+
+			</div>
+		</div>
+
+		
+		{% endblock %}	
