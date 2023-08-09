@@ -20,6 +20,7 @@
                         <th>Category_Name</th>
                         <th>Description</th>
 						<th>Image</th>
+						<td>Status</td>
 
                     </tr>
                 </thead>
@@ -36,10 +37,27 @@
 								No image available
 							{% endif %}
 						</td>
-						
+						{% if i.is_blocked %}
+						<td>Blocked</td>
+						{% else %}
+						<td>Unblocked</td>
+						{% endif %}
 						<td>
-                            <button><a href="#editEmployeeModal-{{forloop.counter}}" data-toggle="modal">Edit</a></button>
+                            <button class="btn btn-primary"><a href="#editEmployeeModal-{{forloop.counter}}" data-toggle="modal">Edit</a></button>
                         </td>
+						<td>
+							<form method="POST" action="{% url 'block_cat' i.id %}">
+							  {% csrf_token %}
+							  <button type="submit" class="btn btn-danger">
+								{% if i.is_blocked %}
+								Unblock
+								{% else %}
+								Block
+								{% endif %}
+							  </button>
+							</form>
+						  </td>
+
                     </tr> 
 					{% endfor %}
                 </tbody>

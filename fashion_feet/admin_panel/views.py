@@ -4,6 +4,7 @@ from accounts.models import Account
 from home.models import Category, Product, Variation
 from django.contrib.auth.models import auth
 from django.contrib import messages
+from orders.models import Order, OrderProduct
 
 # Create your views here.
 
@@ -142,6 +143,11 @@ def update_cat(request, id):
     return render(request, 'admin_cat.html')
 
 
+def block_cat(request, id):
+    category = get_object_or_404(Category, id=id)
+    category.is_blocked = not category.is_blocked
+    category.save()
+    return redirect('admin_cat')
 
 def admin_product(request):
     category = Category.objects.all()
@@ -291,5 +297,24 @@ def delete_variation(request, id):
     return redirect('admin_variation')
 
 
+def admin_order(request):
+    orders = Order.objects.all()
+    context = {
+        'orders' : orders
+    }
+    return render(request, 'admin_order.html', context)
 
+def change_order_status(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        order.status = new_status
+        order.save()
+    return redirect('admin_order')
 
+def cancel_order_admin(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        order.status = 'Cancelled'
+        order.save()
+    return redirect('admin_order')

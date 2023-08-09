@@ -18,7 +18,9 @@ from django.core.mail import EmailMessage
 
 def payments(request):
     order_number = request.session.get('order_number')
-    order = Order.objects.get(user=request.user, is_ordered=False, order_number=order_number)
+    order = Order.objects.get(user=request.user, is_ordered = False, order_number=order_number)
+    order.is_ordered = True
+    order.save()
     cart_items = CartItem.objects.filter(user=request.user)
     for item in cart_items:
         orderproduct = OrderProduct()
@@ -59,7 +61,7 @@ def place_order(request, total=0, quantity = 0):
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
     if cart_count <= 0:
-        return redirect('store')
+        return redirect('product_list')
     
     delivery_charge = 0
     discount = 0

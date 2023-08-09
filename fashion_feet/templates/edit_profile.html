@@ -1,89 +1,120 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+    .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.form-row .form-group {
+    flex-basis: 50%;
+    padding-right: 10px;
+}
+
+.form-row .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group input[type="file"],
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+</style>
+
 <div class="colorlib-product">
     <div class="container">
-
-
-<h1>View/Edit Profile</h1>
-
-
-<form action="{% url 'place_order' %}" method="POST" class="">
-    {% csrf_token %}
-
-<div class="row">
-    <div class="col-lg-12 colorlib-form ">
-    
-            <h2>Billing Details</h2>
-          <div class="row">
-           
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="fname">First Name</label>
-                       {{user_form.first_name}}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="lname">Last Name</label>
-                        {{user_form.last_name}}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="Phone">Phone Number</label>
-                        {{user_form.phone_number}}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="lname">Profile Image</label>
-                        {{profile_form.profile_picture}}
-                    </div>
-                </div>
-
-           <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="fname">Address Line 1</label>
-                        {{profile_form.address_line_1}}
-              </div>
-              <div class="form-group">
-                <label for="fname">Address Line 2</label>
-                {{profile_form.address_line_2}}
-              </div>
-           </div>
-        
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="stateprovince">Country</label>
-                        {{profile_form.country}}
+        <h1>View/Edit Profile</h1>
+        <div class ="row">
+            <div class ="col-md-12">
+                <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-control">
+                        
+                        <div>
+                            <img src = "{{userprofile.profile_picture.url}}" alt="Profile Picture" width="100" style="border-radius: 50px;">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ user_form.first_name.id_for_label }}">First Name</label>
+                                {{ user_form.first_name }}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ user_form.last_name.id_for_label }}">Last Name</label>
+                                {{ user_form.last_name }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ user_form.phone_number.id_for_label }}">Phone Number</label>
+                                {{ user_form.phone_number }}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ profile_form.profile_picture.id_for_label }}">Profile Image</label>
+                                {{ profile_form.profile_picture }}
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                            <label for="{{ profile_form.address_line_1.id_for_label }}">Address Line 1</label>
+                            {{ profile_form.address_line_1 }}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ profile_form.address_line_2.id_for_label }}">Address Line 2</label>
+                            {{ profile_form.address_line_2 }}
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="{{ profile_form.city.id_for_label }}">City</label>
+                                {{ profile_form.city }}
+                            </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label for="{{ profile_form.state.id_for_label }}">State/Province</label>
+                                {{ profile_form.state }}
+                            </div>
+                            
+                            <div class="form-group col-md-4">
+                                <label for="{{ profile_form.country.id_for_label }}">Country</label>
+                                {{ profile_form.country }}
+                            </div>
                         </div>
                     </div>
-                
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="lname">State/Province</label>
-                        {{profile_form.state}}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="lname">City</label>
-                        {{profile_form.city}}
-                    </div>
-                </div>
-                
-       </div>
-       <div>
-        <input type="submit" value="Save Changes" style="background-color: #88c8bc;">
-
-       </div>
-       
-    
+                    
+                    <button type="submit">Save</button>
+                </form>
     </div>
-    </form>
 </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -17,7 +17,7 @@ def home(request):
 
 
 def product_list(request):
-    products = Product.objects.all().filter(is_available=True).order_by('product_name')
+    products = Product.objects.all().filter(is_available=True, category__is_blocked=False).order_by('product_name')
     product_count = products.count()
     paginator = Paginator(products, 6)
     page = request.GET.get('page')
@@ -30,7 +30,7 @@ def product_list(request):
 
 
 def men_product_list(request):
-    products = Product.objects.filter(category__category_name = 'Men', is_available=True)
+    products = Product.objects.filter(category__category_name = 'Men', category__is_blocked=False, is_available=True)
     product_count = products.count()
     paginator = Paginator(products, 3)
     page = request.GET.get('page')
@@ -42,7 +42,7 @@ def men_product_list(request):
     return render(request, 'product_list.html', context)
 
 def women_product_list(request):
-    products = Product.objects.filter(category__category_name = 'Women',is_available=True)
+    products = Product.objects.filter(category__category_name = 'Women', category__is_blocked=False, is_available=True)
     product_count = products.count()
     paginator = Paginator(products, 3)
     page = request.GET.get('page')

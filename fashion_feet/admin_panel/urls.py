@@ -14,12 +14,16 @@ urlpatterns = [
     path('admin_cat/', views.admin_cat, name='admin_cat'),
     path('add_cat', views.add_cat, name='add_cat'),
     path('update_cat/<str:id>', views.update_cat, name='update_cat'),
+    path('block_cat/<str:id>', views.block_cat, name='block_cat'),
     path('add_prod', views.add_prod, name='add_prod'),
     path('update_prod/<str:id>', views.update_prod, name='update_prod'),
     path('delete_prod/<str:id>', views.delete_prod, name='delete_prod'),
     path('admin_variation/', views.admin_variation, name='admin_variation'),
-     path('add_variation', views.add_variation, name='add_variation'),
+    path('add_variation', views.add_variation, name='add_variation'),
     path('update_variation/<str:id>', views.update_variation, name='update_variation'),
     path('delete_variation/<str:id>', views.delete_variation, name='delete_variation'),
+    path('admin_order/', views.admin_order, name='admin_order'),
+    path('change_order_status/<str:order_id>', views.change_order_status, name='change_order_status'),
+    path('cancel_order_admin/<str:order_id>', views.cancel_order_admin, name='cancel_order_admin'),
 
 ]
