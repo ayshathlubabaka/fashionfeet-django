@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content%}
+
+		<div class="breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<p class="bread"><span><a href="index.html">Home</a></span> / <span>Checkout</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="colorlib-product">
+			<div class="container">
+
+				<form action="{% url 'payments' %}" method="POST" class="">
+					{% csrf_token %}
+
+				<div class="row">
+					<div class="col-lg-8 colorlib-form">
+                        <div class="card mt-5">
+                            
+                            <div class="card-body">
+                              <h5 class="card-title mb-0">Billing address</h5>
+                              <p class="card-text mb-0">{{order.full_name}}</p>
+                              <p class="card-text mb-0">{{order.full_address}}</p>
+                              <p class="card-text mb-0">{{order.city}},{{order.state}}</p>
+                              <p class="card-text mb-0">{{order.country}}</p>
+                              <p class="card-text mb-0">{{order.phone}}</p>
+                              <p class="card-text mb-0">{{order.email}}</p>
+                            </div>
+                          </div>
+                          <div class="card mt-5">
+                            
+                            <div class="card-body ">
+                              <h5 class="card-title">Payment Method</h5>
+                              <p class="card-text">Cash on Delivery.</p>
+                            </div>
+                          </div>
+                          <div class="card mt-5">
+                            
+                            <div class="card-body">
+                              <h5 class="card-title">Your Order</h5>
+                              <div class="cart-detail">
+                                
+                                <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th class="col-3">Product</th>
+                                        <th class="col-3"></th>
+                                        <th class="col-3">Quantity</th>
+                                        <th class="col-3">Price</th>
+                                        
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for c in cart_items %}
+                                        <tr>
+                                          <td class="col-3"><img src="{{ c.product.images.url }}" alt="{{ c.product }}" width="50"></td>
+                                          <td class="col-3"> {{c.product}}<br>Rs {{c.product.price}}</td>
+                                          <td class="col-3 text-center">{{c.quantity}}</td>
+                                          <td class="col-3">Rs.{{c.sub_total}}</td>
+                                          
+                                        </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                            </div>
+                              
+                            </div>
+                          </div>
+							
+		            
+					</div>
+
+					<div class="col-lg-4">
+						<div class="row">
+							
+
+						   <div class="w-100"></div>
+
+						   <div class="col-md-12">
+							<div class="total-wrap">
+								<div class="row">
+									
+									<div class="col-sm-12 text-center">
+										<div class="total">
+											<div class="sub">
+												<p><span>Subtotal:</span> <span>Rs. {{total}}</span></p>
+												<p><span>Delivery:</span> <span>Rs. {{delivery_charge}}</span></p>
+												<p><span>Discount:</span> <span>Rs. {{discount}}</span></p>
+											</div>
+											<div class="grand-total">
+												<p><span><strong>Total:</strong></span> <span>Rs. {{grand_total}}</span></p>
+											</div>
+										</div>
+										<div class="container-fluid mb-3"></div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+
+						   <div class="col-md-12">
+								
+								
+									<div class="container-fluid text-center">
+										<input type="submit" class="btn btn-primary" value="Confirm Order ">
+									</div>
+								
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</form>
+
+			</div>
+		</div>
+
+		
+		{% endblock %}	

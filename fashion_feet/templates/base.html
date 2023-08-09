@@ -127,7 +127,13 @@
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="#">Profile</a>
+                                                <a class="dropdown-item" href="{% url 'edit_profile' %}">View/Edit Profile</a>
+                                            </li>
+                                            <li class="dropdown-submenu">
+                                                <a class="dropdown-item" href="">View Orders</a>
+                                            </li>
+                                            <li class="dropdown-submenu">
+                                                <a class="dropdown-item" href="">Change Password</a>
                                             </li>
                                             <li class="dropdown-submenu">
                                                 <a class="dropdown-item" style=" color: red;" href="/accounts/user_logout">Logout</a>

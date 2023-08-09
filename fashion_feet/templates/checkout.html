@@ -15,7 +15,7 @@
 		<div class="colorlib-product">
 			<div class="container">
 
-				<form action="" method="post" class="">
+				<form action="{% url 'place_order' %}" method="POST" class="">
 					{% csrf_token %}
 
 				<div class="row">
@@ -23,82 +23,76 @@
 					
 							<h2>Billing Details</h2>
 		              	<div class="row">
-			               <div class="col-md-12">
-			                  <div class="form-group">
-			                  	<label for="country">Select Country</label>
-			                     <div class="form-field">
-			                     	<i class="icon icon-arrow-down3"></i>
-			                        <select name="people" id="people" class="form-control">
-				                      	<option value="#">Select country</option>
-				                        <option value="#">India</option>
-				                        <option value="#">Qatar</option>
-				                        <option value="#">UAE</option>
-			                        </select>
-			                     </div>
-			                  </div>
-			               </div>
+			               
 
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="fname">First Name</label>
-										<input type="text" id="fname" class="form-control" placeholder="Your firstname" required>
+										<input type="text" id="fname" name="first_name" class="form-control" placeholder="Your firstname" required>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="lname">Last Name</label>
-										<input type="text" id="lname" class="form-control" placeholder="Your lastname" required>
+										<input type="text" id="lname" name="last_name" class="form-control" placeholder="Your lastname" required>
 									</div>
 								</div>
 
 			               <div class="col-md-12">
 									<div class="form-group">
-										<label for="fname">Address</label>
-			                    	<input type="text" id="address" class="form-control" placeholder="Enter Your Address" required>
+										<label for="fname">Address Line 1</label>
+			                    	<input type="text" id="address" name="address_line_1" class="form-control" placeholder="Enter Your Address" required>
 			                  </div>
 			                  <div class="form-group">
-			                    	<input type="text" id="address2" class="form-control" placeholder="Second Address">
+								<label for="fname">Address Line 2</label>
+			                    	<input type="text" id="address2" name="address_line_2" class="form-control" placeholder="Second Address">
 			                  </div>
 			               </div>
 			            
-			               <div class="col-md-12">
+								<div class="col-md-4">
 									<div class="form-group">
-										<label for="companyname">Town/City</label>
-			                    	<input type="text" id="towncity" class="form-control" placeholder="Town or City" required>
-			                  </div>
-			               </div>
-			            
-								<div class="col-md-6">
+										<label for="stateprovince">Country</label>
+										<input type="text" id="zippostalcode" name="country" class="form-control" placeholder="Country" required>
+										</div>
+									</div>
+								
+								<div class="col-md-4">
 									<div class="form-group">
-										<label for="stateprovince">State/Province</label>
-										<input type="text" id="fname" class="form-control" placeholder="State Province" required>
+										<label for="lname">State/Province</label>
+										<input type="text" id="zippostalcode" name="state" class="form-control" placeholder="State/Province" required>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<div class="form-group">
-										<label for="lname">Zip/Postal Code</label>
-										<input type="text" id="zippostalcode" class="form-control" placeholder="Zip / Postal" required>
+										<label for="lname">City</label>
+										<input type="text" id="zippostalcode" name="city" class="form-control" placeholder="State/Province" required>
 									</div>
 								</div>
 							
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="email">E-mail Address</label>
-										<input type="text" id="email" class="form-control" placeholder="State Province" required>
+										<input type="text" id="email" name="email" class="form-control" placeholder="E-mail" required>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="Phone">Phone Number</label>
-										<input type="text" id="zippostalcode" class="form-control" placeholder="" required>
+										<input type="text" id="zippostalcode" name="phone" class="form-control" placeholder="Phone" required>
 									</div>
 								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="companyname">Order Note</label>
+			                    	<input type="text" id="towncity" name="order_note" class="form-control" placeholder="" required>
+			                  </div>
+			               </div>
 
 								
 		               </div>
 		            
 					</div>
-
+				
 					<div class="col-lg-6">
 						<div class="row">
 							<div class="col-md-12">
@@ -159,7 +153,7 @@
 									<div class="form-group">
 										<div class="col-md-12">
 											<div class="radio">
-											   <label><input type="radio" name="optradio"> Cash on Delivery</label>
+											   <label><input type="radio" name="payment_method"> Cash on Delivery</label>
 											</div>
 										</div>
 									</div>
