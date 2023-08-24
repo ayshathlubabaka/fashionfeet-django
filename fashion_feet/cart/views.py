@@ -55,6 +55,14 @@ def add_cart(request, product_id):
                     item = CartItem.objects.get(product=product, id=item_id)
                     item.quantity += 1
                     item.save()
+                    quantity = item.quantity
+                    sub_total = item.product.price * quantity
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        response_data = {
+                            'quantity': quantity,
+                            'sub_total': sub_total,
+                        }
+                        return JsonResponse(response_data)
                     break
         
             else:
@@ -62,6 +70,14 @@ def add_cart(request, product_id):
                 if len(product_variation) > 0:
                     item.variations.set(product_variation)
                 item.save()
+                quantity = item.quantity
+                sub_total = item.product.price * quantity
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    response_data = {
+                        'quantity': quantity,
+                        'sub_total': sub_total,
+                    }
+                    return JsonResponse(response_data)
                 
         else:
             cart_item = CartItem.objects.create(
@@ -74,8 +90,6 @@ def add_cart(request, product_id):
                 cart_item.variations.clear()
                 cart_item.variations.add(*product_variation)
             cart_item.save()
-
-        
 
         return redirect('cart')
     
@@ -157,8 +171,22 @@ def remove_cart(request, product_id, cart_item_id):
         if cart_item.quantity>1:
             cart_item.quantity -= 1
             cart_item.save()
+            quantity = cart_item.quantity
+            sub_total = cart_item.product.price * quantity
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                response_data = {
+                    'quantity': quantity,
+                    'sub_total': sub_total,
+                }
+                return JsonResponse(response_data)
         else:
             cart_item.delete()
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                response_data = {
+                    'quantity': 0,  # Indicate that the cart item is removed
+                    'sub_total': 0,  # Indicate that the cart item is removed
+                }
+                return JsonResponse(response_data)
     except:
         pass
     
@@ -175,6 +203,11 @@ def remove_cart_item(request, product_id, cart_item_id):
         cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
     print('cart_item_id',cart_item_id)
     cart_item.delete()
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        response_data = {
+            'message': 'Cart item removed successfully.',
+        }
+        return JsonResponse(response_data)
     
     return redirect('cart')
 
@@ -197,16 +230,22 @@ def cart(request, total=0, delivery_charge=0,cart_items=None):
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
             discount_price += (cart_item.product.new_price * cart_item.quantity)
-           
-            print('discount_price_unit ',discount_price)
 
         discount = total - discount_price
-        print('discount',discount)
         delivery_charge = 30
         grand_total = total + delivery_charge - discount
 
     except ObjectDoesNotExist:
         pass
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        response_data = {
+        'total' : total,
+        'delivery_charge' : delivery_charge,
+        'grand_total':grand_total,
+        'discount' : discount,
+        }
+        return JsonResponse(response_data)
 
     context = {
         'cart_items' : cart_items,
@@ -217,6 +256,7 @@ def cart(request, total=0, delivery_charge=0,cart_items=None):
         'discount' : discount,
 
     }
+    
     return render(request, 'cart.html', context)
 
 @login_required(login_url='login')
