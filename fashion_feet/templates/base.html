@@ -38,6 +38,12 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+     <!-- Include the PayPal JavaScript SDK -->
+     <script src="https://www.paypal.com/sdk/js?client-id=ASseBc-y7Aii5DpiCX-apdmwFslGApdCnYBeavMfxqTnhWMKm-8gtvmNhHyY-k_EjxeQ9aOT6OqP6Ryl"></script>
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+
 
 	</head>
     
@@ -67,6 +73,54 @@
 .dropdown.open .dropdown-menu {
   display: block;
 }
+.autocomplete-chat-box {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    z-index: 999;
+}
+
+.autocomplete-chat-box .autocomplete-result {
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.autocomplete-chat-box .autocomplete-result:hover {
+    background-color: #eee;
+}
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #555;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #333;
+}
 
         </style>
 		
@@ -81,20 +135,22 @@
                                 <div id="colorlib-logo"><a href="/">Fashion Feet</a></div>
                             </div>
                             <div class="col-sm-5 col-md-3">
-                            <form action="{% url 'search' %}" method="GET" class="search-wrap">
-                               <div class="form-group">
-                                  <input type="search" class="form-control search" placeholder="Search" name="keyword">
-                                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-                               </div>
-                            </form>
-                         </div>
-                     </div>
+                                <form action="{% url 'search' %}" method="GET">
+                                <div class="search-container">
+                                    <input type="text" placeholder="Search..." name="keyword" id="product-name" autocomplete="off">
+                                    <button class="btn submit-search text-center" style="background-color:#88c8bc; ;" type="submit"><i class="icon-search"></i></button>
+                                    <div class="autocomplete-chat-box" id="autocomplete-results" style="color: black;"></div>
+                                  </div>
+                                </form>
+                                
+                                 </div>
+                                </div>
                         <div class="row">
                             <div class="col-sm-12 text-left menu-1">
                                 <ul class="nav-menu">
                                     
                                     <li class="dropdown ">
-                                        <button type="button" id="selectedButton" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                        <button type="button" id="selectedButton" class="btn dropdown-toggle" style="background-color:#88c8bc;" data-toggle="dropdown">
                                             <i class="fa fa-bars"></i>Products
                                         </button>
                                       
@@ -102,27 +158,20 @@
                                             <li class="dropdown-submenu">
                                                 <a class="dropdown-item" href="{% url 'product_list' %}" >All Products</a>
                                             </li>
-                                            
+                                            {% for i in category %}
                                             <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'men_product_list' %}" >Men</a>
+                                                <a class="dropdown-item" href="{% url 'product_list' i.id  %}" >{{i.category_name}}</a>
                                             </li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'women_product_list' %}" >Women</a>
-                                            </li>
-                                            
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="#">Boys (under 12)</a>
-                                            </li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="#">Girls (under 12)</a>
-                                            </li>
+                                            {% endfor %}
+                                          
                                         </ul>
                                       
                                     </li>
-                                    <li><a href="#">Wishlist</a></li>
+                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                             
                                     {% if user.is_authenticated %}
                                     <li class="dropdown float-right">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" style="background-color: #88c8bc;">
                                             <i class="fa fa-bars"></i>{{user.username}}
                                         </button>
                                         <ul class="dropdown-menu">
@@ -136,6 +185,10 @@
                                                 <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
                                             </li>
                                             <li class="dropdown-submenu">
+                                                <a class="dropdown-item" href="{% url 'wallet' %}">wallet</a>
+                                            </li>
+                                        
+                                            <li class="dropdown-submenu">
                                                 <a class="dropdown-item" style=" color: red;" href="/accounts/user_logout">Logout</a>
                                             </li>
                                         </ul>
@@ -143,36 +196,17 @@
                                     {% else %}
                                     <li class="float-right"><a href="{% url 'login' %}">Login</a></li>
                                     {% endif %}
-                                    
-                                    <li class="cart"><a href="{% url 'cart' %}" ><i class="icon-shopping-cart"></i> Cart[{{cart_count}}]</a></li>
+                                     <li class="cart"><a href="{% url 'cart' %}" ><i class="icon-shopping-cart"></i> Cart[{{cart_count}}]</a></li>
                                   </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="sale">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-8 offset-sm-2 text-center">
-                                <div class="row">
-                                    <div class="owl-carousel2">
-                                        <div class="item">
-                                            <div class="col">
-                                                <h3><a href="{% url 'product_list' %}">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="col">
-                                                <h3><a href="{% url 'product_list' %}">Our biggest sale yet 50% off all summer shoes</a></h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            
             </nav>
+
+            <div class="container-fluid" style="background-color:#de1c1c; height: 40px; "></div>
+            
 
                 {% block content %}
 
@@ -181,6 +215,40 @@
                
                 
             {% endblock %}
+            <script>
+               $(document).ready(function() {
+    $('#product-name').on('input', function() {
+        var keyword = $(this).val();
+        if (keyword.length >= 1) {
+            $.ajax({
+                url: '/autocomplete/', // Replace with the URL for your autocomplete endpoint
+                data: { 'keyword': keyword },
+                dataType: 'json',
+                success: function(data) {
+                    var results = '';
+                    for (var i = 0; i < data.length; i++) {
+                        results += '<div class="autocomplete-result">' + data[i] + '</div>';
+                    }
+                    $('#autocomplete-results').html(results);
+                }
+            });
+        } else {
+            $('#autocomplete-results').html('');
+        }
+    });
+
+    // Handle click on autocomplete suggestion
+    $(document).on('click', '.autocomplete-result', function() {
+        var suggestion = $(this).text();
+        $('#product-name').val(suggestion);
+        $('#autocomplete-results').html('');
+    });
+});
+            </script>
+            
+        
+            <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+            <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
             <!-- jQuery -->
             <script src="{% static 'theme-assets/js/jquery.min.js' %}"></script>
            <!-- popper -->

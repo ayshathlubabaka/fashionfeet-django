@@ -32,27 +32,52 @@
   border-color: #999;
 }
 </style>
+<div class="container-fluid bg-light">
+	<li class="dropdown">
+        <button type="button" id="selectedButton" class="dropdown-toggle" data-toggle="dropdown" style="background-color:#cab23d; ">
+            Sort
+        </button>
+        <ul class="dropdown-menu">
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" data-sort="newToOld" href="?sort=newToOld">New to Old items</a>
+            </li>
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" data-sort="oldToNew" href="?sort=oldToNew">Old to New Items</a>
+            </li>
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" data-sort="highToLow" href="?sort=highToLow">High to Low Price</a>
+            </li>
+            <li class="dropdown-submenu">
+                <a class="dropdown-item" data-sort="lowToHigh" href="?sort=lowToHigh">Low to High Price</a>
+            </li>
+        </ul>
+    </li>
+</div>
+
+
 <div class="container-fluid" style="height: 30px;"></div>
-		<div class="colorlib-featured">
-			<div class="container">
+		<div class="colorlib-featured" id="product_list">
+			<div class="container" >
 				<div class="row">
 					{% for p in products %}
 					<div class="col-md-4 mt-4">
-						<div class="card card-product-grid text-center">
+						<div class="card card-product-grid text-center" style="background-color:#b0deb6; height: 400px;">
 							
 							<a href="/view_prod/{{p.id}}" class="img-wrap" style="padding-top: 10px;"><img src="{{p.images.url}}" height="180px" width="180px"> </a>
 							<figcaption class="info-wrap">
-								<a href="/view_prod/{{p.id}}" class="title" style="font-weight: bold; color: black;">{{p.product_name}}</a>
-								<div class="price mt-1 mb-2" style="color: red; ">Rs. {{p.price}}</div>
+								<a href="/view_prod/{{p.id}}" class="title" style="font-weight: bold; color: rgb(23, 20, 20);">{{p.product_name | capfirst}}</a>
+                 <div class="price mt-1 mb-2" style="color: rgb(37, 31, 31); font-weight: bold;">Rs. {{p.price}}</div>
+                 {% if p.new_price != p.price %}
+                 <div class="price mt-1 mb-2" style="color: rgb(215, 4, 4); font-weight: bold;">Offer price : Rs. {{p.new_price}}</div>
+               
+                 {% endif %}
 								<div class="col-sm-12 text-center">
-									{% if p.stock == 0 or p.stock < 0 %}
-									<h3 class="addtocart"><a href="" class="text-danger">Out of Stock</a></h3>
+        
 							
-							{% else %}
-									<p class="addtocart"><a href="{% url 'add_cart' p.id %}" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i> Add to Cart</a></p>
-									{% endif %}
-								</div>
-								<a href=""><p>Add to Wishlist</p></a>
+									<p class="addtocart"><a href="/view_prod/{{p.id}}" class="btn btn-addtocart" style="background-color: #cab23d; color: black;"> View Details</a></p>
+									
+								<a href="{% url 'add_to_wishlist' product_id=p.id %}" class="btn"><span style="font-size:large;">&#10084;</span>Add to Wishlist</i></a>
+              </div>
 							</figcaption>
 						</div>
 					</div>
@@ -96,5 +121,29 @@
         $('.nav-menu li').removeClass('active');
         $(this).addClass('active');
       });
+    });
+
+	$(document).ready(function() {
+        // Get the current value of the sort parameter from the URL
+        var currentSort = new URLSearchParams(window.location.search).get('sort');
+
+        // If the sort parameter is available, set it as the dropdown menu label and move it to the top of the dropdown menu
+        if (currentSort) {
+            var selectedOption = $('a[data-sort="' + currentSort + '"]');
+            $('#selectedButton').text(selectedOption.text());
+            selectedOption.addClass('selected');
+            selectedOption.parent().prependTo(selectedOption.parent().parent());
+        }
+
+        // Handle click event on sorting options
+        $('.dropdown-item').on('click', function() {
+            // Remove the 'selected' class from all sorting options
+            $('.dropdown-item').removeClass('selected');
+
+            // Set the clicked sorting option as the dropdown menu label, move it to the top, and highlight it
+            $(this).addClass('selected');
+            $('#selectedButton').text($(this).text());
+            $(this).parent().prependTo($(this).parent().parent());
+        });
     });
 		</script>

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content%}
+
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <p class="bread"><span><a href="index.html">Home</a></span> / <span>My Wishlist</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="colorlib-product">
+    <div class="container">
+
+        <div class="row row-pb-lg">
+					<div class="col-md-12">
+						<div class="product-name d-flex">
+                            <div class="one-eight text-center">
+								<span></span>
+							</div>
+							<div class="one-forth text-left px-4">
+								<span>Product Details</span>
+							</div>
+							<div class="one-eight text-center">
+								<span>Price</span>
+							</div>
+							
+							<div class="one-eight text-center px-4">
+								<span>Remove</span>
+							</div>
+						</div>
+                        {% for item in wishlist_items %}
+						<div class="product-cart d-flex">
+                            <div class="one-eight text-center">
+								<div class="display-tc">
+									<span class="price"></span>
+								</div>
+							</div>
+							<div class="one-forth">
+								<div class="product-img" style="background-image: url('{{ item.product.images.url }}');">
+								</div>
+								<div class="display-tc">
+									<a href="/view_prod/{{item.product.id}}"><h3>{{item.product.product_name}}</h3></a>
+								</div>
+							</div>
+							<div class="one-eight text-center">
+								<div class="display-tc">
+									<span class="price">{{item.product.price}}</span>
+								</div>
+							</div>
+                         
+							
+							<div class="one-eight text-center">
+								<div class="display-tc">
+									<a href="{% url 'remove_from_wishlist' wishlist_item_id=item.id %}" class="closed"></a>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+						</div>
+					</div>
+				</div>
+
+                <div class="row">
+					<div class="col-sm-8 offset-sm-2 text-center colorlib-heading colorlib-heading-sm">
+						<a href="{% url 'product_list' %}"><h2>Shop more</h2></a>
+					</div>
+				</div>
+
+</div>
+</div>
+
+
+      
+               
+        {% endblock %}
+
+      

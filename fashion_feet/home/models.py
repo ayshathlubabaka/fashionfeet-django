@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import Permission
+from accounts.models import Account
 # Create your models here.
 
 class Category(models.Model):
@@ -17,6 +18,7 @@ class Product(models.Model):
     product_name = models.CharField(max_length= 100, unique=True)
     description = models.TextField(max_length=255, blank=True)
     price = models.IntegerField()
+    new_price = models.IntegerField(null=True, default=0)
     images = models.ImageField(upload_to='photos/products')
     is_available = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -53,3 +55,35 @@ class Variation(models.Model):
     def __str__(self):
         return self.variation_value
     
+class WishlistItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.first_name}'s Wishlist: {self.product.product_name}"
+    
+
+class Coupon(models.Model):
+    coupon_code = models.CharField(max_length=10)
+    is_expired = models.BooleanField(default=False)
+    discount_price = models.IntegerField(default=0)
+    minimum_amount = models.IntegerField(default=1000)
+
+
+class CategoryOffer(models.Model):
+    description = models.CharField(max_length=100)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    discount_percentage = models.FloatField()
+    is_expired = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.category} Offer"
+    
+class MinimumPurchaseOffer(models.Model):
+    description = models.CharField(max_length=100)
+    minimum_purchase_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_percentage = models.FloatField()
+    is_expired = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Minimum Purchase Offer"

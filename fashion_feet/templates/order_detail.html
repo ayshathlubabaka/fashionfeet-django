@@ -12,6 +12,9 @@
                     <div class="row">
                        
                         <div class="col-lg-12">
+                            
+                            <div class="row">
+                                <div class="col-md-6">
                             <!-- col-lg-12 start here -->
                             <div class="invoice-details mt25">
                                 <div class="well">
@@ -19,10 +22,24 @@
                                         <li><strong>Order: </strong>{{order.order_number}}</li>
                                         
                                         <li><strong>Order Date:</strong> {{order.created_at}}</li>
-                                        <li><strong>Status:</strong>Cash On Delivery</li>
+                                        <li><strong>Status:</strong>PayPal</li>
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="invoice-details mt25">
+                                <div class="well">
+                                    <ul class="list-unstyled mb0">
+                                        <li><strong>Billing Name: </strong>{{order.full_name}}</li>
+                                        <li><strong>Address</strong> {{order.full_address}}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                        </div>
                            
                             <div class="invoice-items">
                                 <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
@@ -63,8 +80,13 @@
                                             </tr>
 
                                             <tr>
-                                                <th colspan="2" class="text-right">Discount</th>
-                                                <th class="text-center">{{order.discount}}</th>
+                                                <th colspan="2" class="text-right">Offer Discount</th>
+                                                <th class="text-center">{{order.offer_discount}}</th>
+                                            </tr>
+
+                                            <tr>
+                                                <th colspan="2" class="text-right">Coupon Discount</th>
+                                                <th class="text-center">{{order.coupon_discount}}</th>
                                             </tr>
                                             
                                             <tr>
@@ -75,7 +97,9 @@
                                     </table>
                                 </div>
                             </div>
-                           
+                           <div>
+                            <a href="{% url 'my_orders' %}" style="color: blue;">Go back to Your orders</a>
+                           </div>
                         </div>
                         <!-- col-lg-12 end here -->
                     </div>

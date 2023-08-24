@@ -36,8 +36,9 @@ class Order(models.Model):
     city = models.CharField(max_length=50)
     order_note = models.CharField(max_length=50, blank=True)
     order_total = models.FloatField()
-    delivery_charge = models.FloatField()
-    discount = models.FloatField()
+    delivery_charge = models.FloatField(default=0)
+    offer_discount = models.FloatField(default=0)
+    coupon_discount = models.FloatField()
     status = models.CharField(max_length=10, choices=STATUS, default='New')
     ip = models.CharField(blank=True, max_length=20)
     is_ordered = models.BooleanField(default=False)
@@ -48,7 +49,7 @@ class Order(models.Model):
         return f'{self.first_name}{self.last_name}'
     
     def full_address(self):
-        return f'{self.address_line_1}{self.address_line_2}'
+        return f'{self.address_line_1}, {self.address_line_2}'
     
     def __str__(self):
         return self.first_name

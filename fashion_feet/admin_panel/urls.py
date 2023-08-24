@@ -23,7 +23,25 @@ urlpatterns = [
     path('update_variation/<str:id>', views.update_variation, name='update_variation'),
     path('delete_variation/<str:id>', views.delete_variation, name='delete_variation'),
     path('admin_order/', views.admin_order, name='admin_order'),
+    path('admin_order_detail/<str:order_id>', views.admin_order_detail, name='admin_order_detail'),
     path('change_order_status/<str:order_id>', views.change_order_status, name='change_order_status'),
     path('cancel_order_admin/<str:order_id>', views.cancel_order_admin, name='cancel_order_admin'),
-
+    path('admin_logout/', views.admin_logout, name='admin_logout'),
+    path('coupon_manage/', views.coupon_manage, name='coupon_manage'),
+    path('create_coupon/', views.create_coupon, name='create_coupon'),
+    path('edit_coupon/<str:coupon_id>', views.edit_coupon, name='edit_coupon'),
+    path('delete_coupon/<str:coupon_id>', views.delete_coupon, name='delete_coupon'),
+    path('cat_offer_manage/', views.cat_offer_manage, name='cat_offer_manage'),
+    path('create_catoffer/', views.create_catoffer, name='create_catoffer'),
+    path('edit_catoffer/<str:id>', views.edit_catoffer, name='edit_catoffer'),
+    path('delete_catoffer/<str:id>', views.delete_catoffer, name='delete_catoffer'),
+    path('min_offer_manage/', views.min_offer_manage, name='min_offer_manage'),
+    path('create_minoffer/', views.create_minoffer, name='create_minoffer'),
+    path('edit_minoffer/<str:id>', views.edit_minoffer, name='edit_minoffer'),
+    path('delete_minoffer/<str:id>', views.delete_minoffer, name='delete_minoffer'),
+    path('sales_report/', views.sales_report, name='sales_report'),
+    path('pdf_view/', views.ViewPDF.as_view(), name="pdf_view"),
+    path('pdf_download/', views.DownloadPDF.as_view(), name="pdf_download"),
+    path('admin_lte/', views.admin_lte, name='admin_lte')
+    
 ]

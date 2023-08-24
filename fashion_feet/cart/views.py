@@ -1,12 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from home.models import Variation
-from home.models import Product
+from home.models import Variation, Product, MinimumPurchaseOffer, CategoryOffer
 from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from accounts.models import UserProfile
 # Create your views here.
+
 
 def _cart_id(request):
     
@@ -16,11 +18,13 @@ def _cart_id(request):
     return cart
 
 def add_cart(request, product_id):
+
     current_user = request.user
     product = Product.objects.get(id=product_id)
     if current_user.is_authenticated:
         product_variation = []
 
+        
         if request.method == 'POST':
             for item in request.POST:
                 key = item
@@ -58,6 +62,7 @@ def add_cart(request, product_id):
                 if len(product_variation) > 0:
                     item.variations.set(product_variation)
                 item.save()
+                
         else:
             cart_item = CartItem.objects.create(
                 product = product,
@@ -69,6 +74,9 @@ def add_cart(request, product_id):
                 cart_item.variations.clear()
                 cart_item.variations.add(*product_variation)
             cart_item.save()
+
+        
+
         return redirect('cart')
     
     else:
@@ -113,6 +121,7 @@ def add_cart(request, product_id):
                 item = CartItem.objects.get(product=product, id=item_id)
                 item.quantity += 1
                 item.save()
+                
         
             else:
                 item = CartItem.objects.create(product=product, quantity=1, cart=cart)
@@ -131,7 +140,8 @@ def add_cart(request, product_id):
             if len(product_variation)>0:
                 cart_item.variations.clear()
                 cart_item.variations.add(*product_variation)
-            cart_item.save()
+            cart_item.save() 
+
         return redirect('cart')
 
 
@@ -151,6 +161,8 @@ def remove_cart(request, product_id, cart_item_id):
             cart_item.delete()
     except:
         pass
+    
+    
     return redirect('cart')
 
 def remove_cart_item(request, product_id, cart_item_id):
@@ -161,17 +173,20 @@ def remove_cart_item(request, product_id, cart_item_id):
     else:
         cart = Cart.objects.get(cart_id=_cart_id(request))
         cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
+    print('cart_item_id',cart_item_id)
     cart_item.delete()
+    
     return redirect('cart')
 
 
 
-def cart(request, total=0,  delivery_charge = 0, cart_items=None):
+def cart(request, total=0, delivery_charge=0,cart_items=None):
     
     try:
         quantity=0
-        discount= 0
         grand_total = 0
+        discount_price = 0
+        
 
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active = True)
@@ -181,25 +196,37 @@ def cart(request, total=0,  delivery_charge = 0, cart_items=None):
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
+            discount_price += (cart_item.product.new_price * cart_item.quantity)
+           
+            print('discount_price_unit ',discount_price)
+
+        discount = total - discount_price
+        print('discount',discount)
         delivery_charge = 30
-        discount = (2 * total)/100
         grand_total = total + delivery_charge - discount
 
     except ObjectDoesNotExist:
         pass
+
     context = {
         'cart_items' : cart_items,
         'quantity' : quantity,
         'total' : total,
         'delivery_charge' : delivery_charge,
+        'grand_total':grand_total,
         'discount' : discount,
-        'grand_total':grand_total
 
     }
     return render(request, 'cart.html', context)
 
 @login_required(login_url='login')
-def checkout(request, total=0, quantity=0, delivery_charge = 0, discount= 0, grand_total = 0, cart_items=None):
+def checkout(request, total=0, quantity=0, delivery_charge = 0, grand_total = 0, cart_items=None):
+
+    user_profile = get_object_or_404(UserProfile, user = request.user)
+    cat_offer = CategoryOffer.objects.filter().first()
+    min_offer = MinimumPurchaseOffer.objects.filter().first()
+    min_discount_per = min_offer.discount_percentage
+    discount_price = 0
     try:
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active = True)
@@ -207,21 +234,31 @@ def checkout(request, total=0, quantity=0, delivery_charge = 0, discount= 0, gra
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active = True)
         for cart_item in cart_items:
+            print(cart_item.product.new_price)
             total += (cart_item.product.price * cart_item.quantity)
+            if cart_item.product.new_price is not None and cart_item.product.new_price > 0:
+                discount_price += (cart_item.product.new_price * cart_item.quantity)
+            else:
+                discount_price += (cart_item.product.price * cart_item.quantity) 
             quantity += cart_item.quantity
+            cat_discount = total - discount_price
+        min_discount = (total*min_discount_per/100)
         delivery_charge = 30
-        discount = (2 * total)/100
-        grand_total = total + delivery_charge - discount
+        grand_total = total + delivery_charge-cat_discount
 
     except ObjectDoesNotExist:
         pass
     context = {
+        'min_offer' : min_offer,
+        'cat_offer' : cat_offer,
         'cart_items' : cart_items,
         'quantity' : quantity,
         'total' : total,
         'delivery_charge' : delivery_charge,
-        'discount' : discount,
-        'grand_total':grand_total
+        'grand_total':grand_total,
+        'min_discount' : min_discount,
+        'cat_discount' : cat_discount,
+        'user_profile' : user_profile
 
     }
     return render(request, 'checkout.html', context)

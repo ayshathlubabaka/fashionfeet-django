@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content%}
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<div class="breadcrumbs">
 			<div class="container">
 				<div class="row">
@@ -12,36 +12,69 @@
 		</div>
 
 
-		<div class="colorlib-product">
-			<div class="container">
+		<div class="colorlib-product" style="background-color: #c1e4dd;" >
+			<div class="container" style="background-color: #c1e4dd;" >
 
 				<form action="{% url 'place_order' %}" method="POST" class="">
 					{% csrf_token %}
 
 				<div class="row">
-					<div class="col-lg-6 colorlib-form ">
+					<div class="col-lg-8">
+					<div class="col-lg-12 colorlib-form border border-danger">
 					
 							<h2>Billing Details</h2>
-		              	<div class="row">
+							<input type="radio" id="existing" name="address_option" value="existing" checked>
+
+							<label for="existing">
+								
+								Select Address
+									
+								<div class="container">
+									<div class="card mb-3">
+										<div class="card-body">
+											<p class="card-text">Name: {{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</p>
+											<p class="card-text">Address: {{ user_profile.full_address }}</p>
+											<p class="card-text">City: {{ user_profile.city }}</p>
+											<p class="card-text">State: {{ user_profile.state }}</p>
+											<p class="card-text">Country: {{ user_profile.country }}</p>
+											<p class="card-text">Phone: {{ user_profile.user.phone_number }}</p>
+											<p class="card-text">email: {{ user_profile.user.email }}</p>
+										</div>
+									</div>
+								</div>
+								
+						
+							</label>
+							
+							
+							<br>
+
+							<input type="radio" id="new" name="address_option" value="new">
+							<label for="new">
+								
+								Add New Address
+							
+						
+		              	<div class="row" id="new_address">
 			               
 
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="fname">First Name</label>
-										<input type="text" id="fname" name="first_name" class="form-control" placeholder="Your firstname" required>
+										<input type="text" id="fname" name="first_name" class="form-control" placeholder="Your firstname" >
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="lname">Last Name</label>
-										<input type="text" id="lname" name="last_name" class="form-control" placeholder="Your lastname" required>
+										<input type="text" id="lname" name="last_name" class="form-control" placeholder="Your lastname" >
 									</div>
 								</div>
 
 			               <div class="col-md-12">
 									<div class="form-group">
 										<label for="fname">Address Line 1</label>
-			                    	<input type="text" id="address" name="address_line_1" class="form-control" placeholder="Enter Your Address" required>
+			                    	<input type="text" id="address" name="address_line_1" class="form-control" placeholder="Enter Your Address" >
 			                  </div>
 			                  <div class="form-group">
 								<label for="fname">Address Line 2</label>
@@ -52,93 +85,122 @@
 								<div class="col-md-4">
 									<div class="form-group">
 										<label for="stateprovince">Country</label>
-										<input type="text" id="zippostalcode" name="country" class="form-control" placeholder="Country" required>
+										<input type="text" id="country" name="country" class="form-control" placeholder="Country" >
 										</div>
 									</div>
 								
 								<div class="col-md-4">
 									<div class="form-group">
 										<label for="lname">State/Province</label>
-										<input type="text" id="zippostalcode" name="state" class="form-control" placeholder="State/Province" required>
+										<input type="text" id="state" name="state" class="form-control" placeholder="State/Province" >
 									</div>
 								</div>
 								<div class="col-md-4">
 									<div class="form-group">
 										<label for="lname">City</label>
-										<input type="text" id="zippostalcode" name="city" class="form-control" placeholder="State/Province" required>
+										<input type="text" id="city" name="city" class="form-control" placeholder="State/Province" >
 									</div>
 								</div>
 							
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="email">E-mail Address</label>
-										<input type="text" id="email" name="email" class="form-control" placeholder="E-mail" required>
+										<input type="text" id="email" name="email" class="form-control" placeholder="E-mail" >
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="Phone">Phone Number</label>
-										<input type="text" id="zippostalcode" name="phone" class="form-control" placeholder="Phone" required>
+										<input type="text" id="phone" name="phone" class="form-control" placeholder="Phone" >
 									</div>
 								</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="companyname">Order Note</label>
-			                    	<input type="text" id="towncity" name="order_note" class="form-control" placeholder="" required>
-			                  </div>
-			               </div>
-
-								
-		               </div>
-		            
+						 </div>
+						 
+						</label>
 					</div>
-				
-					<div class="col-lg-6">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="cart-detail">
-									<h2>Cart Total</h2>
-									<table class="table">
-										<thead>
-										  <tr>
-											<th class="col-3">Product</th>
-											<th class="col-3"></th>
-											<th class="col-3">Quantity</th>
-											<th class="col-3">Price</th>
-											
-										  </tr>
-										</thead>
-										<tbody>
-											{% for c in cart_items %}
-											<tr>
-											  <td class="col-3"><img src="{{ c.product.images.url }}" alt="{{ c.product }}" width="50"></td>
-											  <td class="col-3"> {{c.product}}<br>Rs {{c.product.price}}</td>
-											  <td class="col-3 text-center">{{c.quantity}}</td>
-											  <td class="col-3">Rs.{{c.sub_total}}</td>
-											  
-											</tr>
-										  {% endfor %}
-										</tbody>
-									  </table>
-								</div>
-						   </div>
+					<div class="col-lg-12 colorlib-form border border-danger ">
+						<h2>Cart Total</h2>
+						<table class="table">
+							<thead>
+							  <tr>
+								<th colspan="2"></th>
+								<th colspan="2">Product</th>
+								<th colspan="2">Quantity</th>
+								<th colspan="2">Price</th>
+								
+							  </tr>
+							</thead>
+							<tbody>
+								{% for c in cart_items %}
+								<tr>
+								  <td colspan="2"><img src="{{ c.product.images.url }}" alt="{{ c.product }}" width="50"></td>
+								  <td colspan="2">{{c.product}}
+									{% if c.variations.all %}
+									  {% for i in c.variations.all %}
+									   <br>{{i.variation_category | capfirst}} : {{i.variation_value | capfirst}}
+									  {% endfor %}
+									{% endif %}
+									Rs {{c.product.price}}
+								 </td>
+								   <td colspan="2">{{c.quantity}}</td>
+								  <td colspan="2">Rs.{{c.sub_total}}</td>
+								</tr>
+							  {% endfor %}
+							</tbody>
+						  </table>
+					</div>
+					<div class="col-lg-12 colorlib-form border border-danger">
+					
+							<h4>Select Offer</h4>
+						
+							<p style="font-weight: bold;"><input type="radio" name="selected_offer" value="offer1" checked>
+							 Offer 1: {{ cat_offer.description }}</p>
+							<p style="color: red; font-weight: bold;">Rs. {{ cat_discount }} OFF</p>
+							<input type="hidden" name="offer1_discount" value="{{ cat_discount }}">
 
-						   <div class="w-100"></div>
+							<p style="font-weight: bold;"><input type="radio" name="selected_offer" value="offer2">
+							Offer 2: {{ min_offer.description }}</p>
+							<p style="color: red; font-weight: bold;">Rs. {{ min_discount }} OFF</p>
+							<input type="hidden" name="offer2_discount" value="{{ min_discount }}">
+						</div>
+				</div>
+				
+
+				
+				
+					<div class="col-lg-4 ">
+						<div class="row">
+						
+
+						   <div class="col-md-12">
+							<div class="cart-detail border border-danger">
+								
+								<div class="form-group">
+									<label for="coupon"><h5 style="font-weight: bold;">Coupon Code:</h4></label>
+									<input type="text" name="coupon_code" id="couponInput" class="form-5ontrol" placeholder="Enter coupon code">
+									<button class="btn btn-light" onclick="displayCouponCode()">Apply</button>
+									<p style="color: red; font-weight: bold;" id="displayCoupon"></p>
+								  </div>
+							</div>
+						</div>
+						
 
 						   <div class="col-md-12">
 							<div class="total-wrap">
 								<div class="row">
 									
-									<div class="col-sm-12 text-center">
-										<div class="total">
+									<div class="col-sm-12">
+										<div class="total border border-danger">
 											<div class="sub">
 												<p><span>Subtotal:</span> <span>Rs. {{total}}</span></p>
 												<p><span>Delivery:</span> <span>Rs. {{delivery_charge}}</span></p>
-												<p><span>Discount:</span> <span>Rs. {{discount}}</span></p>
+												<p><span>Discount:</span> <span>Rs. {{cat_discount}}</span></p>
+												
 											</div>
 											<div class="grand-total">
 												<p><span><strong>Total:</strong></span> <span>Rs. {{grand_total}}</span></p>
 											</div>
+											
 										</div>
 										<div class="container-fluid mb-3"></div>
 									</div>
@@ -147,33 +209,140 @@
 							</div>
 						</div>
 
-						   <div class="col-md-12">
-								<div class="cart-detail">
-									<h2>Payment Method</h2>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-											   <label><input type="radio" name="payment_method"> Cash on Delivery</label>
-											</div>
-										</div>
-									</div>
-									<div class="container-fluid text-center">
-										<input type="submit" class="btn btn-primary" value="Place an order &rarr; ">
+						<div class="col-md-12">
+							<div class="cart-detail border border-danger">
+								<h2>Payment Method</h2>
+								<div class="form-group">
+									<div class="radio">
+										<label><input type="radio" name="payment_method"><img src="/static/theme-assets/images/paypal.png"> Paypal</label>
 									</div>
 								</div>
+								<div id="paypal-button-container">
+								</div>
 							</div>
+							
 						</div>
-						<div class="row">
-							<div class="col-md-12 text-center">
-						<a href="/product_list" class="btn" style="background-color: #88c8bc; color: aliceblue;"> &#8592; Continue Shopping</a>
-					</div>
-				</div>
-					</div>
-				</div>
-			</form>
 
-			</div>
-		</div>
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="container-fluid text-center">
+									<input type="submit" class="btn btn-danger" value="Place an order &rarr; ">
+								</div>
+						</div>
+					</form>
+						</div>
+						</div>
+						
+			
+
+		<script>
+
+function displayCouponCode() {
+      // Get the entered coupon code
+      var couponCode = document.getElementById("couponInput").value;
+
+      // Display the coupon code below the button
+      var displayCoupon = document.getElementById("displayCoupon");
+      displayCoupon.textContent = "Entered Coupon Code: " + couponCode;
+    }
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+			var amount = "{{grand_total}}";
+			var url = "{% url 'payments' %}"
+			var csrftoken = getCookie('csrftoken');
+			var orderID = "{{order.order_number}}"
+			var payment_method = "PayPal"
+
+			paypal.Button.render({
+	
+				env: 'sandbox', // sandbox | production
+	
+				// PayPal Client IDs - replace with your own
+				// Create a PayPal app: https://developer.paypal.com/developer/applications/create
+				client: {
+					sandbox:    'ASseBc-y7Aii5DpiCX-apdmwFslGApdCnYBeavMfxqTnhWMKm-8gtvmNhHyY-k_EjxeQ9aOT6OqP6Ryl',
+					production: '<insert production client id>'
+				},
+	
+				// Show the buyer a 'Pay Now' button in the checkout flow
+				commit: true,
+	
+				// payment() is called when the button is clicked
+				payment: function(data, actions) {
+	
+
+					var exchangeRate = 0.012;
+                    var inrAmount = amount;
+                   var usdAmount = inrAmount * exchangeRate;
+					// Make a call to the REST api to create the payment
+					return actions.payment.create({
+						payment: {
+							transactions: [
+								{
+									amount: { total: usdAmount.toFixed(2), currency: 'USD' }
+								}
+							]
+						}
+					});
+				},
+	
+				// onAuthorize() is called when the buyer approves the payment
+				onAuthorize: function(data, actions) {
+
+					
+	
+					// Make a call to the REST api to execute the payment
+					return actions.payment.execute().then(function() {
+
+						console.log(details)
+					    sendData();
+						function sendData(){
+							fetch(url,{
+								method : "POST",
+								headers : {
+									"Content-type" : "application/json",
+									"X-CSRF Token" : csrftoken,
+								},
+								body : JSON.stringify({
+									orderID: orderID,
+									transID: details.id,
+									payment_method: payment_method,
+									status: details.status,
+								}),
+							})
+							.then(response => response.json())
+							.then(data => console.log(data));
+						}
+					});
+				}
+	
+			}, '#paypal-button-container');
+
+			document.getElementById("offer-form").addEventListener("submit", function(event) {
+				var selectedOffer = document.querySelector('input[name="offer"]:checked');
+				if (!selectedOffer) {
+					event.preventDefault();
+					alert("Please select one offer.");
+				}
+			});
+
+
+		</script>
 
 		
 		{% endblock %}	

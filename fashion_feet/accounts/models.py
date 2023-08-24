@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+
 class MyAccountManager(BaseUserManager):
     def create_user(self, first_name, last_name, username, email, password=None):
         if not email:
@@ -79,9 +80,48 @@ class UserProfile(models.Model):
         return self.user.first_name
     
     def full_address(self):
-        return f'{self.address_line_1}{self.address_line_2}'
+        return f'{self.address_line_1} {self.address_line_2}'
+    
 
+class Wallet(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
+    def add_funds(self, amount):
+        self.balance += amount
+        self.save()
+
+    def deduct_funds(self, amount):
+        if self.balance >= amount:
+            self.balance -= amount
+            self.save()
+        else:
+            raise ValueError("Insufficient funds in the wallet")
+
+    def get_wallet_balance(self):
+        return self.balance
+    
+class Transaction(models.Model):
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.wallet.user.username} - {self.amount} - {self.timestamp}"
+    
+class ReferralCode(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    status = models.BooleanField(default=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class Referral(models.Model):
+    referrer = models.ForeignKey(Account, on_delete=models.CASCADE)
+    referred_user = models.ForeignKey(Account, related_name='referrals', on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.referrer.username} referred {self.referred_user.username}"
 
     
     

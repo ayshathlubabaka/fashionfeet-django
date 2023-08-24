@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="colorlib-product">
+    <div class="container text-center" style="background-color: #e2efed; border: solid;">
+<h4>Referral Link</h4>
+<p style="font-weight: bold;">Your Referral code is <span style="color: red;">{{code}}</span></p>
+    <p style="font-weight: bolder;">Thank you for using our referral program! Share the link below to invite others:</p>
+    
+     <p style="font-weight: bold;">   <a href="#">
+            {{ request.get_host }}{% url 'referral_link' code=code %}
+        </a>
+    </p>
+    <p style="font-weight: bolder;">When someone clicks on the link and signs up, they will be associated with your referral code.</p>
+</div>
+</div>
+{% endblock %}

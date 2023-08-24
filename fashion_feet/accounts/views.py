@@ -1,3 +1,6 @@
+from datetime import timezone
+import datetime
+from decimal import Decimal
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
@@ -5,12 +8,12 @@ from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from orders.models import OrderProduct
 from .forms import UserForm, UserProfileForm
-from .models import Account, UserProfile
+from .models import Account, UserProfile, ReferralCode, Referral, Wallet, Transaction
 from django.contrib.auth import authenticate, login as user_login, logout
 import requests
 from django.contrib import messages
 from orders.models import Order
-
+from django.http import JsonResponse
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -30,6 +33,7 @@ def register(request):
         phone_number = request.POST.get('phone_number')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
+        referral_code = request.POST.get('referral_code')
         
         
         if password != confirm_password:
@@ -40,7 +44,28 @@ def register(request):
         user = Account.objects.create_user(username=username,first_name=first_name, last_name=last_name, email=email, password=password)
         user.phone_number = phone_number
         user.save()
+
+        wallet = Wallet.objects.create(user=user, balance=0.00)
+        wallet.save()
         
+        if referral_code:
+            try:
+                referrer_code = ReferralCode.objects.get(code=referral_code, status=True)
+                referrer = referrer_code.user
+                referral = Referral(referrer=referrer, referred_user=user)
+                referral.save()
+
+                wallet = Wallet.objects.get(user = referrer)
+                wallet.add_funds(25)
+                wallet.save()
+
+                wallet = Wallet.objetcs.get(user=user)
+                wallet.add_funds(25)
+                wallet.save()
+                
+            except ReferralCode.DoesNotExist:
+                pass
+
         current_site = get_current_site(request)
         mail_subject = 'Please activate your account'
         message = render_to_string('account_verification_email.html',{
@@ -120,8 +145,8 @@ def login(request):
             except:
                  return redirect('home')
         else:
-            error_message = "Invalid email or password"
-            return render(request, 'login.html', {'error_message': error_message})
+            messages.error(request, 'Please enter valid credentials')
+            return render(request, 'login.html')
     
     return render(request, 'login.html')
 
@@ -204,9 +229,12 @@ def resetPassword(request):
     else:
         return render(request, 'resetPassword.html')
 
-@login_required(login_url='/login/')  
+@login_required(login_url='login')  
 def edit_profile(request):
-    userprofile = get_object_or_404(UserProfile, user=request.user)
+    try:
+        userprofile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        userprofile = UserProfile.objects.create(user=request.user)
     if request.method == 'POST':
        user_form = UserForm(request.POST, instance=request.user)
        profile_form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
@@ -219,15 +247,23 @@ def edit_profile(request):
     else:
            user_form = UserForm(instance=request.user)
            profile_form = UserProfileForm(instance=userprofile)
+
+    try:
+        referral_code = request.user.referralcode  # Assuming the related_name is set to 'referralcode' in the ReferralCode model
+        code = referral_code.code
+    except:
+        code = None
     context = {
            'user_form' : user_form,
            'profile_form' : profile_form,
            'userprofile' : userprofile,
+           'code' : code,
     }
+
 
     return render(request, 'edit_profile.html', context)
 
-@login_required(login_url='/login/')
+@login_required(login_url='/login')
 def my_orders(request):
 
     print(request.user)
@@ -241,6 +277,17 @@ def my_orders(request):
     for order in orders:
         print(order.order_number)
     return render(request, 'my_orders.html', context)
+
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        order.status = 'Cancelled'
+        order.save()
+        response_data = {
+            'message': 'Order cancelled successfully'
+        }
+        return JsonResponse(response_data)
+    return JsonResponse({'message': 'Invalid request'})
 
 @login_required(login_url='login')
 def change_password(request):
@@ -277,3 +324,79 @@ def order_detail(request, order_id):
         'subtotal': sub_total,
     }
     return render(request, 'order_detail.html', context)
+
+@login_required
+def add_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST, request.FILES)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save(commit=False)
+            user.save()
+            
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            
+            messages.success(request, 'Profile created successfully')
+            return redirect('edit_profile')
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+    
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    }
+    
+    return render(request, 'edit_profile.html', context)
+
+def wallet(request):
+    try:
+        wallet = Wallet.objects.get(user=request.user)
+        balance = wallet.balance
+        transaction = Transaction.objects.filter(wallet = wallet, timestamp__gte=datetime.datetime.now() - datetime.timedelta(days=7)).order_by('-timestamp')
+
+        context = {
+            'balance': balance,
+            'transaction' : transaction
+        }
+        print('balance', balance)
+        return render(request, 'wallet.html', context)
+    except Wallet.DoesNotExist:
+        return render(request, 'wallet.html')
+
+def add_money_to_wallet(request):
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        amount = Decimal(amount)
+        wallet = Wallet.objects.get(user=request.user)
+        wallet.add_funds(amount)
+        wallet.save()
+    return redirect('wallet')
+
+@login_required
+def assign_referral_code(request):
+    if request.method == 'POST':
+        referral_code = request.POST.get('referral_code')
+        user = request.user
+
+        try:
+            code = ReferralCode.objects.get(code=referral_code, status=True)
+            code.user = user
+            code.save()
+            return render(request, 'success.html')
+        except ReferralCode.DoesNotExist:
+            return render(request, 'invalid_code.html')
+
+    return render(request, 'assign_referral_code.html')
+
+def referral_link(request, code):
+    try:
+        referal_code = ReferralCode.objects.get(user = request.user)
+        code = referal_code.code
+        return render(request, 'referral_link.html', {'code': code})
+    except:
+        pass
+   

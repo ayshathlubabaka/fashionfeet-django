@@ -43,21 +43,26 @@ button[type="submit"]:hover {
 }
 </style>
 
-<div class="colorlib-product">
-    <div class="container">
+
+
+<div class="colorlib-product" style="background-color: whitesmoke;">
+    <div class="container" >
         <h1>View/Edit Profile</h1>
         <div class ="row">
             <div class ="col-md-12">
                 <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     
-                    <div class="form-control">
+                    <div class="form-control" >
                         
+                        {% if userprofile.profile_picture %}
                         <div>
-                            <img src = "{{userprofile.profile_picture.url}}" alt="Profile Picture" width="100" style="border-radius: 50px;">
+                            <img src="{{ userprofile.profile_picture.url }}" alt="Profile Picture" width="100" style="border-radius: 50px;">
                         </div>
-                        
-                        <div class="form-row">
+                    {% else %}
+                        <p>No profile picture available</p>
+                    {% endif %}
+                        <div class="form-row" >
                             <div class="form-group">
                                 <label for="{{ user_form.first_name.id_for_label }}">First Name</label>
                                 {{ user_form.first_name }}
@@ -111,10 +116,21 @@ button[type="submit"]:hover {
                     </div>
                     
                     <button type="submit">Save</button>
+
                 </form>
+                {% if code is not None%}
+                <div class="container-fluid mt-3 text-center" style="border: solid red; background-color: aliceblue;">
+                    <a style="font-weight: bold;" href="{% url 'referral_link' code=code %}">Click here to view / share your referral link</a>
+                </div>
+                {% endif %}
+
+
+            
     </div>
 </div>
     </div>
 </div>
+
+
 
 {% endblock %}

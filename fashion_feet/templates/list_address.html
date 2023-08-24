@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content%}
+
+<div>
+   {% for i in user_profile %} 
+    <p>Name : {{i.user.first_name}} {{i.user.last_name}}</p><br>
+    <p>Address : {{i.full_address}}</p><br>
+    <p>City : {{i.city}}</p><br>
+    <p>State : {{i.state}}</p><br>
+    <p>Country : {{i.country}}</p><br>
+    <p>Phone  : {{i.user.phone_number}}</p><br>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

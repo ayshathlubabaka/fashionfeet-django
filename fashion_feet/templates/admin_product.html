@@ -20,6 +20,7 @@
                         <th>Product_Name</th>
 						<th>Price</th>
                         <th>Image</th>
+						
 						<th>is_available</th>
                         <th>Category</th>
 						<th>Modified Date</th>
@@ -39,6 +40,7 @@
 								No image available
 							{% endif %}
 						</td>
+					
 						<td>{{i.is_available}}</td>
 						<td>{{i.category.category_name}}</td>
 						<td>{{i.modified_date}}</td>
@@ -55,7 +57,7 @@
 	<div id="addEmployeeModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form action ="{% url 'add_prod' %}" method = "POST" enctype="multipart/form-data">
+				<form id="yourFormId" action ="{% url 'add_prod' %}" method = "POST" enctype="multipart/form-data">
 					{% csrf_token %}
 					<div class="modal-header">						
 						<h4 class="modal-title">Add product</h4>
@@ -77,7 +79,9 @@
 						<div class="form-group">
 							<label>Image</label>
 							<input name="images" type="file" id="images" class="form-control" required>
+							
 						</div>
+					
 						<div class="form-group">
 							<label>is_available</label>
 							<input name="is_available" type="text" class="form-control" required>
@@ -181,4 +185,70 @@
 	</div>
 	{% endfor %}
 </div>
+<div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="imagePreview" src="#" alt="Preview">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="cropButton">Crop</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+	// Get the input element for image upload
+	const imageInput = document.getElementById('images');
+  
+	// Create a new Cropper instance
+	let cropper;
+  
+	// Handle image selection
+	imageInput.addEventListener('change', function(event) {
+	  const file = event.target.files[0];
+  
+	  // Read the selected image file
+	  const reader = new FileReader();
+	  reader.onload = function(e) {
+		const img = document.getElementById('croppedImage');
+		img.src = e.target.result;
+  
+		// Initialize the Cropper instance
+		cropper = new Cropper(img, {
+		  aspectRatio: 1, // Set the aspect ratio for cropping
+		  viewMode: 1, // Show the cropped area within the container
+		});
+	  };
+	  reader.readAsDataURL(file);
+	});
+  
+	// Handle form submission
+	const form = document.getElementById('yourFormId');
+	form.addEventListener('submit', function(event) {
+	  event.preventDefault();
+  
+	  // Get the cropped image data
+	  const canvas = cropper.getCroppedCanvas();
+	  const croppedImageData = canvas.toDataURL();
+  
+	  // Create a hidden input field to hold the cropped image data
+	  const hiddenInput = document.createElement('input');
+	  hiddenInput.type = 'hidden';
+	  hiddenInput.name = 'cropped_image';
+	  hiddenInput.value = croppedImageData;
+	  form.appendChild(hiddenInput);
+  
+	  // Submit the form
+	  form.submit();
+	});
+  </script>
 {% endblock %}

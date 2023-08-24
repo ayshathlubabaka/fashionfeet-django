@@ -1,0 +1,78 @@
+
+
+
+
+            <div class="card-body">
+                
+                <div style="border: 1px solid black; padding: 10px; background-color: rgb(255, 207, 196); text-align: center;">
+                    <h1>Total Sales: Rs {{ total_sales }}</h1>
+                </div>
+                <div><h2>Sales by Category</h2> </div>
+                    <div style="border: 1px solid black; padding: 10px; ">
+                        <table style="border-collapse: collapse; width: 100%; background-color:rgb(211, 227, 227)">
+                            <tr style=" background-color:rgb(141, 166, 166)">
+                                <th style="border: 1px solid black; padding: 8px;">Category</th>
+                                <th style="border: 1px solid black; padding: 8px;">Total Sales</th>
+                            </tr>
+                            {% for category in category_sales %}
+                            <tr>
+                                <td style="border: 1px solid black; padding: 8px;">{{ category.category_name }}</td>
+                                <td style="border: 1px solid black; padding: 8px;">Rs {{ category.sales_revenue }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                    <h2>Sales by Product</h2>
+                    <div style="border: 1px solid black; padding: 10px;">
+                        <table style="border-collapse: collapse; width: 100%; background-color: blanchedalmond;">
+                            <tr style="background-color: rgb(216, 199, 173);">
+                                <th style="border: 1px solid black; padding: 8px;">Product</th>
+                                <th style="border: 1px solid black; padding: 8px;">Total Sales</th>
+                            </tr>
+                            {% for product in product_sales %}
+                            <tr>
+                                <td style="border: 1px solid black; padding: 8px;">{{ product.product_name }}</td>
+                                <td style="border: 1px solid black; padding: 8px;">Rs {{ product.sales_revenue }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+    
+                    <h2>Sales by Day:</h2>
+                    <div style="border: 1px solid black; padding: 10px;">
+                        <table style="border-collapse: collapse; width: 100%; background-color:rgb(183, 219, 183)">
+                            <tr style="background-color:rgb(154, 185, 154) ">
+                                <th style="border: 1px solid black; padding: 8px;">Date</th>
+                                <th style="border: 1px solid black; padding: 8px;">Daily Sales</th>
+                            </tr>
+                            {% for day in daily_sales %}
+                            <tr>
+                                <td style="border: 1px solid black; padding: 8px;">{{ day.created_at__date }}</td>
+                                <td style="border: 1px solid black; padding: 8px;">Rs {{ day.daily_sales }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                    <div class="text-center">
+                        <h2>Order Details:</h2>
+                        <table style="border-collapse: collapse; width: 100%; background-color: rgb(173, 231, 233);">
+                            <tr style="background-color: rgb(134, 181, 183);;">
+                                <th style="border: 1px solid black; padding: 8px;">Order ID</th>
+                                <th style="border: 1px solid black; padding: 8px;">Customer Name</th>
+                                <th style="border: 1px solid black; padding: 8px;">Order Total</th>
+                                <th style="border: 1px solid black; padding: 8px;">Order Date</th>
+                            </tr>
+                            {% for order in orders %}
+                            <tr>
+                                <td style="border: 1px solid black; padding: 8px;">{{ order.id }}</td>
+                                <td style="border: 1px solid black; padding: 8px;">{{ order.user }}</td>
+                                <td style="border: 1px solid black; padding: 8px;">{{ order.order_total }}</td>
+                                <td style="border: 1px solid black; padding: 8px;">{{ order.created_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+             </div>
