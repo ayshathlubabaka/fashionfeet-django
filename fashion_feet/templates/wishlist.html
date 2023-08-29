@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block content%}
 
-<div class="breadcrumbs">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <p class="bread"><span><a href="index.html">Home</a></span> / <span>My Wishlist</span></p>
-            </div>
-        </div>
-    </div>
+
+{% if not wishlist_items %}
+
+<div class="container-fluid text-center mt-5">
+	<h1>Your Wishlist is Empty</h1><br>
+	<a href="/product_list" class="continue">Continue Shopping</a>
 </div>
 
 
+
+{% else %}
 <div class="colorlib-product">
     <div class="container">
 
@@ -73,7 +73,7 @@
 </div>
 </div>
 
-
+{% endif %}
       
                
         {% endblock %}

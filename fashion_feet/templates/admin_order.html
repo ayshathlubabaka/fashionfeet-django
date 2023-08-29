@@ -1,4 +1,5 @@
 {% extends 'admin_base.html' %}
+
 {% block content%}
 
 <div class="app-content content">
@@ -7,10 +8,35 @@
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-6">
-						<h2>Manage <b>Orders</b></h2>
+						<a href="{% url 'admin_order' %}" style="color: white;"><h2>Manage <b>Orders</b></h2></a>
 					</div>
+          <div class="col-sm-3"></div>
+          <div class="col-sm-1">
+              <li class="dropdown">
+                    <button type="button" id="selectedButton" class="dropdown-toggle" data-toggle="dropdown" style="background-color:#3d49ca; ">
+                        Sort
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item" data-sort="newToOld" href="{% url 'new_to_old' %}" style="font-size: 12px;">New to Old Orders</a>
+                        </li>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item" data-sort="oldToNew" href="{% url 'old_to_new' %}" style="font-size: 12px;">Old to New Orders</a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+            
+          
+          <div class="col-sm-2">
+            <form method="get" action="/admin/search_order">
+            <input style="color: black;" type="search" aria-label="Search" placeholder="Search by Status" name="query" id="search">
+            <button class="btn btn-outline-success" style="color: black;" type="submit">Search</button>
+          </form>
+          </div>
                 </div>
             </div>
+            <div id="filteredOrders">
             <table class="table table-hover">
                 <thead>
                   <tr>
@@ -53,8 +79,34 @@
                   {% endfor %}
                 </tbody>
               </table>
+              <div class="mb-5">
+                {% if orders.has_other_pages %}
+                <div class="paginator mb-5">
+                  {% if orders.has_previous %}
+                  <a href="?page={{ orders.previous_page_number }}" class="prev active">Prev</a>
+                  {% else %}
+                  <a href="#" class="prev disabled">Prev</a>
+                  {% endif %}
+                  
+                  {% for i in orders.paginator.page_range %}
+                    {% if orders.number == i %}
+                    <a href="?page={{ i }}" class="page current">{{ i }}</a>
+                    {% else %}
+                    <a href="?page={{ i }}" class="page">{{ i }}</a>
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% if orders.has_next %}
+                  <a href="?page={{ orders.next_page_number }}" class="prev active">Next</a>
+                  {% else %}
+                  <a href="#" class="prev disabled">Next</a>
+                  {% endif %}
+                </div>
+                {% endif %}
+              </div>
+              </div>
     </div>
-	
+
 
 
 {% endblock %}

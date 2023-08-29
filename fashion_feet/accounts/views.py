@@ -59,7 +59,7 @@ def register(request):
                 wallet.add_funds(25)
                 wallet.save()
 
-                wallet = Wallet.objetcs.get(user=user)
+                wallet = Wallet.objects.get(user=user)
                 wallet.add_funds(25)
                 wallet.save()
                 

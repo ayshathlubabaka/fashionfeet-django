@@ -42,87 +42,14 @@
      <script src="https://www.paypal.com/sdk/js?client-id=ASseBc-y7Aii5DpiCX-apdmwFslGApdCnYBeavMfxqTnhWMKm-8gtvmNhHyY-k_EjxeQ9aOT6OqP6Ryl"></script>
      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
      <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-
-
-
+     <link rel="stylesheet" href="{% static 'theme-assets/css/dropdown.css' %}">
+     <link rel="stylesheet" href="{% static 'theme-assets/css/cart.css' %}">
+     <link rel="stylesheet" href="{% static 'theme-assets/css/changepassword.css' %}">
+     <link rel="stylesheet" href="{% static 'theme-assets/css/edit_profile.css' %}">
+     <link rel="stylesheet" href="{% static 'theme-assets/css/product_list.css' %}">
 	</head>
     
 	<body>
-        <style>
-           .dropdown {
-  position: relative;
-}
-
-
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #f9f9f9;
-  padding: 10px;
-  border: 1px solid #ccc;
-  white-space: nowrap; /* Prevent line breaks */
-}
-
-.dropdown-menu li {
-  margin-bottom: 5px;
-}
-
-.dropdown.open .dropdown-menu {
-  display: block;
-}
-.autocomplete-chat-box {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 10px;
-    z-index: 999;
-}
-
-.autocomplete-chat-box .autocomplete-result {
-    margin-bottom: 5px;
-    padding: 5px;
-    background-color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.autocomplete-chat-box .autocomplete-result:hover {
-    background-color: #eee;
-}
-.search-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-input[type="text"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-button[type="submit"] {
-  padding: 10px 20px;
-  background-color: #555;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button[type="submit"]:hover {
-  background-color: #333;
-}
-
-        </style>
 		
         <div class="colorlib-loader"></div>
     
@@ -205,48 +132,25 @@ button[type="submit"]:hover {
             
             </nav>
 
-            <div class="container-fluid" style="background-color:#de1c1c; height: 40px; "></div>
+            <div class="container-fluid" style="background-color:#88c8bc;; height: 40px; "></div>
             
 
-                {% block content %}
+            {% block content %}
 
                 
 
                
                 
             {% endblock %}
-            <script>
-               $(document).ready(function() {
-    $('#product-name').on('input', function() {
-        var keyword = $(this).val();
-        if (keyword.length >= 1) {
-            $.ajax({
-                url: '/autocomplete/', // Replace with the URL for your autocomplete endpoint
-                data: { 'keyword': keyword },
-                dataType: 'json',
-                success: function(data) {
-                    var results = '';
-                    for (var i = 0; i < data.length; i++) {
-                        results += '<div class="autocomplete-result">' + data[i] + '</div>';
-                    }
-                    $('#autocomplete-results').html(results);
-                }
-            });
-        } else {
-            $('#autocomplete-results').html('');
-        }
-    });
-
-    // Handle click on autocomplete suggestion
-    $(document).on('click', '.autocomplete-result', function() {
-        var suggestion = $(this).text();
-        $('#product-name').val(suggestion);
-        $('#autocomplete-results').html('');
-    });
-});
-            </script>
-            
-        
+           
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="path/to/your/custom/javascript.js"></script>
+            <!-- <script src="{% static 'theme-assets/js/payment.js' %}"></script> -->
+            <script src="{% static 'theme-assets/js/product_list.js' %}"></script>
+            <script src="{% static 'theme-assets/js/my_orders.js' %}"></script>
+            <script src="{% static 'theme-assets/js/checkout.js' %}"></script>
+            <script src="{% static 'theme-assets/js/ajaxsearch.js' %}"></script>
+            <script src="{% static 'theme-assets/js/cartajax.js' %}"></script>
             <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
             <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
             <!-- jQuery -->

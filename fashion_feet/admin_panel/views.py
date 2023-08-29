@@ -23,6 +23,8 @@ import json
 from django.db.models import Count
 from django.http import JsonResponse
 from django.utils.encoding import smart_str
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -505,8 +507,14 @@ def delete_variation(request, id):
 @login_required(login_url = 'admin_login')
 def admin_order(request):
     orders = Order.objects.prefetch_related('orderproduct_set').all()
+    order_count = orders.count()
+    paginator = Paginator(orders, 6)
+    page = request.GET.get('page')
+    paged_orders = paginator.get_page(page)
     context = {
-        'orders' : orders
+        'orders': paged_orders,
+        'order_count' : order_count,
+
     }
     return render(request, 'admin_order.html', context)
 
@@ -538,6 +546,46 @@ def admin_order_detail(request, order_id):
         'subtotal': sub_total,
     }
     return render(request, 'admin_order_detail.html', context)
+
+def search_order(request):
+    query = request.GET['query']
+    orders = Order.objects.filter(status__icontains=query)
+    order_count = orders.count()
+    paginator = Paginator(orders, 6)
+    page = request.GET.get('page')
+    paged_orders = paginator.get_page(page)
+    context = {
+        'orders': paged_orders,
+        'order_count' : order_count,
+
+    }
+    return render(request, 'admin_order.html', context)
+
+def new_to_old(request):
+    orders = Order.objects.all().order_by('-created_at')
+    order_count = orders.count()
+    paginator = Paginator(orders, 6)
+    page = request.GET.get('page')
+    paged_orders = paginator.get_page(page)
+    context = {
+        'orders': paged_orders,
+        'order_count' : order_count,
+
+    }
+    return render(request, 'admin_order.html', context)
+
+def old_to_new(request):
+    orders = Order.objects.all().order_by('created_at')
+    order_count = orders.count()
+    paginator = Paginator(orders, 6)
+    page = request.GET.get('page')
+    paged_orders = paginator.get_page(page)
+    context = {
+        'orders': paged_orders,
+        'order_count' : order_count,
+
+    }
+    return render(request, 'admin_order.html', context)
 
 @login_required(login_url = 'admin_login')
 def coupon_manage(request):

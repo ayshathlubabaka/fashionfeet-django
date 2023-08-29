@@ -124,16 +124,18 @@
 							<select id ="product" name="product">
                                 <option disabled selected>Choose</option>
 								{% for p in product %}
-								<option value ="{{p.id}}">{{p.product_name}}</option>
+								<option value="{{ p.id }}" {% if p.id == i.product.id %}selected{% endif %}>
+									{{ p.product_name }}
+								</option>
 								{% endfor %}
 							</select>
 						</div>
 						<div class="form-group">
 							<label>Variant</label>
-							<select id ="variation_category" name="variation_category">
-                                <option disabled selected>Choose</option>
-								<option value ="size">size</option>
-                                <option value ="color">color</option>
+							<select id="variation_category" name="variation_category">
+								<option disabled>Choose</option>
+								<option value="size" {% if i.variation_category == "size" %}selected{% endif %}>size</option>
+								<option value="color" {% if i.variation_category == "color" %}selected{% endif %}>color</option>
 							</select>
 						</div>
                         <div class="form-group">
@@ -154,7 +156,7 @@
 						</div>
 						<div class="form-group">
 							<label>Created Date</label>
-                            <input name="created_date" id="created_date" type="date" class="form-control" required>
+							<input name="created_date" id="created_date" type="date" class="form-control" value="{{ i.created_date|date:'Y-m-d' }}" required>
 						</div>
 					</div>
 					<div class="modal-footer">

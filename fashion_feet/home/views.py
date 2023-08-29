@@ -125,5 +125,8 @@ def remove_from_wishlist(request, wishlist_item_id):
     return redirect('wishlist')
 
 def wishlist(request):
-    wishlist_items = WishlistItem.objects.filter(user=request.user)
+    if request.user.is_authenticated:
+        wishlist_items = WishlistItem.objects.filter(user=request.user)
+    else:
+        wishlist_items = None 
     return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})

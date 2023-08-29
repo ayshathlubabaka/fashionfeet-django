@@ -33,6 +33,7 @@ def add_cart(request, product_id):
                 try:
                     variation = Variation.objects.get(product=product, variation_category__iexact=key, variation_value__iexact=value)
                     product_variation.append(variation)
+                    
                 
                 except:
                     pass
@@ -54,6 +55,13 @@ def add_cart(request, product_id):
                     item_id = id[i]
                     item = CartItem.objects.get(product=product, id=item_id)
                     item.quantity += 1
+                    for variation in product_variation:
+                        print(variation.stock)
+                        if variation.stock < item.quantity:
+                            response_data = {
+                                'error': 'Some variations are out of stock.',
+                            }
+                            return JsonResponse(response_data)
                     item.save()
                     quantity = item.quantity
                     sub_total = item.product.price * quantity
@@ -134,9 +142,21 @@ def add_cart(request, product_id):
                 item_id = id[index]
                 item = CartItem.objects.get(product=product, id=item_id)
                 item.quantity += 1
+                for variation in product_variation:
+                    if variation.stock < item.quantity:
+                        response_data = {
+                            'error': 'Some variations are out of stock.',
+                        }
+                        return JsonResponse(response_data)
                 item.save()
-                
-        
+                quantity = item.quantity
+                sub_total = item.product.price * quantity
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    response_data = {
+                        'quantity': quantity,
+                        'sub_total': sub_total,
+                    }
+                    return JsonResponse(response_data)
             else:
                 item = CartItem.objects.create(product=product, quantity=1, cart=cart)
                 if len(product_variation)>0:
@@ -144,6 +164,14 @@ def add_cart(request, product_id):
                     item.variations.add(*product_variation)
                 print('not exists')
                 item.save()
+                quantity = item.quantity
+                sub_total = item.product.price * quantity
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    response_data = {
+                        'quantity': quantity,
+                        'sub_total': sub_total,
+                    }
+                    return JsonResponse(response_data)
         else:
             cart_item = CartItem.objects.create(
                 product = product,
@@ -219,7 +247,7 @@ def cart(request, total=0, delivery_charge=0,cart_items=None):
         quantity=0
         grand_total = 0
         discount_price = 0
-        
+        discount=0
 
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active = True)
