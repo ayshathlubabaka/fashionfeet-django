@@ -39,9 +39,14 @@ def product_list(request, id=None):
         i.new_price = i.price
         i.save()
 
-    category_offer = CategoryOffer.objects.get(id=1)
-    discount_percentage = category_offer.discount_percentage
-    offer_products = Product.objects.filter(category=category_offer.category)
+    try:
+        category_offer = CategoryOffer.objects.get(id=1)
+        discount_percentage = category_offer.discount_percentage
+        offer_products = Product.objects.filter(category=category_offer.category)
+    except CategoryOffer.DoesNotExist:
+        category_offer = None
+        discount_percentage = 0
+        offer_products = []
     
     if id is not None:
         products = Product.objects.all().filter(category__id = id,is_available=True, category__is_blocked=False).order_by('product_name')

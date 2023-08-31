@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content%}
 
+{% if user.is_authenticated %}
 
 {% if not wishlist_items %}
 
@@ -8,9 +9,6 @@
 	<h1>Your Wishlist is Empty</h1><br>
 	<a href="/product_list" class="continue">Continue Shopping</a>
 </div>
-
-
-
 {% else %}
 <div class="colorlib-product">
     <div class="container">
@@ -74,8 +72,14 @@
 </div>
 
 {% endif %}
-      
-               
+
+{% else %}
+
+<div class="container-fluid text-center mt-5">
+	<h1>Login to View your wishlist</h1><br>
+	<a href="/product_list" class="continue">Continue Shopping</a>
+</div> 
+{% endif %}           
         {% endblock %}
 
       

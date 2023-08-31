@@ -3,7 +3,7 @@
 
 <div class="container-fluid bg-light">
 	<li class="dropdown">
-        <button type="button" id="selectedButton" class="dropdown-toggle" data-toggle="dropdown" style="background-color:#cab23d; ">
+        <button type="button" id="selectedButton" class="dropdown-toggle" data-toggle="dropdown" style="background-color:white; width: 80px; ">
             Sort
         </button>
         <ul class="dropdown-menu">
@@ -44,8 +44,9 @@
         
 							
 									<p class="addtocart"><a href="/view_prod/{{p.id}}" class="btn btn-addtocart" style="background-color: #cab23d; color: black;"> View Details</a></p>
-									
+									{% if user.is_authenticated %}
 								<a href="{% url 'add_to_wishlist' product_id=p.id %}" class="btn"><span style="font-size:large;">&#10084;</span>Add to Wishlist</i></a>
+								{% endif %}
               </div>
 							</figcaption>
 						</div>
