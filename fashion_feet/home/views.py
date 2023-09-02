@@ -107,14 +107,16 @@ def autocomplete(request):
     return JsonResponse([], safe=False)
 
 def search(request):
-    if 'keyword' in request.GET:
-        keyword = request.GET['keyword']
-        if keyword:
-            products = Product.objects.order_by('-created_date').filter(product_name__icontains=keyword)
-            print(products)
+    keyword = request.GET.get('keyword', '')  
 
-    context={
-        'products' : products,
+    if keyword:
+        products = Product.objects.order_by('-created_date').filter(product_name__icontains=keyword)
+        print(products)
+    else:
+        products = []  
+
+    context = {
+        'products': products,
     }
     return render(request, 'product_list.html', context)
 

@@ -63,7 +63,8 @@
 					{% for i in category %}
 					<div class="col-sm-6 text-center">
 						<div class="featured">
-							<a href="{% url 'product_list' i.id %}" class="featured-img"><img src="{{i.cat_image.url}}" style="width:750px; height: 500px;"></a>
+							<a href="{% url 'product_list' i.id %}" class="featured-img"><img src="{{i.cat_image.url}}" style="max-width: 100%; height: 500px">
+							</a>
 							<div class="desc">
 								<h2><a href="{% url 'product_list' i.id %}">Shop {{i.category_name}}'s Collection</a></h2>
 							</div>

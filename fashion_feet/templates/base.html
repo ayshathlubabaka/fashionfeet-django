@@ -6,6 +6,7 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
 	
@@ -72,61 +73,51 @@
                                 
                                  </div>
                                 </div>
-                        <div class="row">
-                            <div class="col-sm-12 text-left menu-1">
-                                <ul class="nav-menu">
-                                    
-                                    <li class="dropdown ">
-                                        <button type="button" id="selectedButton" class="btn dropdown-toggle" style="background-color:#88c8bc;" data-toggle="dropdown">
-                                            <i class="fa fa-bars"></i>Products
-                                        </button>
-                                      
-                                        <ul class="dropdown-menu">
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'product_list' %}" >All Products</a>
-                                            </li>
-                                            {% for i in category %}
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'product_list' i.id  %}" >{{i.category_name}}</a>
-                                            </li>
-                                            {% endfor %}
-                                          
-                                        </ul>
-                                      
-                                    </li>
-                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                             
-                                    {% if user.is_authenticated %}
-                                    <li class="dropdown float-right">
-                                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" style="background-color: #88c8bc;">
-                                            <i class="fa fa-bars"></i>{{user.username}}
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'edit_profile' %}">View/Edit Profile</a>
-                                            </li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'my_orders' %}">View Orders</a>
-                                            </li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
-                                            </li>
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" href="{% url 'wallet' %}">wallet</a>
-                                            </li>
-                                        
-                                            <li class="dropdown-submenu">
-                                                <a class="dropdown-item" style=" color: red;" href="/accounts/user_logout">Logout</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    {% else %}
-                                    <li class="float-right"><a href="{% url 'login' %}">Login</a></li>
-                                    {% endif %}
-                                     <li class="cart"><a href="{% url 'cart' %}" ><i class="icon-shopping-cart"></i> Cart[{{cart_count}}]</a></li>
-                                  </ul>
-                            </div>
-                        </div>
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <ul class="nav-menu">
+                                                <li class="nav-item dropdown">
+                                                    <button type="button" id="selectedButton" class="btn dropdown-toggle" style="background-color:#88c8bc;" data-toggle="dropdown">
+                                                        <i class="fa fa-bars"></i> Products
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li class="dropdown-submenu">
+                                                            <a class="dropdown-item" href="{% url 'product_list' %}" >All Products</a>
+                                                        </li>
+                                                        {% for i in category %}
+                                                        <li class="dropdown-submenu">
+                                                            <a class="dropdown-item" href="{% url 'product_list' i.id  %}" >{{i.category_name}}</a>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                
+                                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                
+                                                {% if user.is_authenticated %}
+                                                <li class="nav-item dropdown float-right">
+                                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #cfe0dd; color: black;">
+                                                        {{user.username}}
+                                                    </a>
+                                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                        <a class="dropdown-item" href="{% url 'edit_profile' %}">View/Edit Profile</a>
+                                                        <a class="dropdown-item" href="{% url 'my_orders' %}">View Orders</a>
+                                                        <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                                                        <a class="dropdown-item" href="{% url 'wallet' %}">Wallet</a>
+                                                        <a class="dropdown-item" style="color: red;" href="/accounts/user_logout">Logout</a>
+                                                    </div>
+                                                </li>
+                                                {% else %}
+                                                <li class="float-right"><a href="{% url 'login' %}">Login</a></li>
+                                                {% endif %}
+                                                <li class="cart"><a href="{% url 'cart' %}" ><i class="icon-shopping-cart"></i> Cart[{{cart_count}}]</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
                     </div>
                 </div>
             
