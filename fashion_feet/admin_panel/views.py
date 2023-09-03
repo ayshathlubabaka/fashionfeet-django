@@ -356,33 +356,32 @@ def add_prod(request):
         created_date = request.POST.get('created_date')
         modified_date = request.POST.get('modified_date')
 
-        # cropped_image_data = request.POST.get('cropped_image')
-        # cropped_image_data = cropped_image_data.split(',')[1]  # Remove the base64 header
-        # cropped_image = base64.b64decode(cropped_image_data) 
+        
+        cropped_image_data = request.POST.get('cropped_image')
+        cropped_image_data = cropped_image_data.split(',')[1] 
+        cropped_image = base64.b64decode(cropped_image_data) 
 
-        # filename = f'{uuid.uuid4()}.jpg'
-        # # Set the file path to save the cropped image
-        # file_path = os.path.join('media','cropped','images',filename)
+        filename = f'{uuid.uuid4()}.jpg'
+        file_path = os.path.join('media','photos','products',filename)
 
-        # try:
-        #     # Save the cropped image file
-        #     with open(file_path, 'wb') as f:
-        #         f.write(cropped_image)
-        # except Exception as e:
-        #     print(f"Error saving the cropped image: {e}")
+        try:
+            with open(file_path, 'wb') as f:
+                f.write(cropped_image)
+        except Exception as e:
+            print(f"Error saving the cropped image: {e}")
 
-        # access_path = file_path.replace('media' + os.sep, '', 1)
+        access_path = file_path.replace('media' + os.sep, '', 1)
 
      
-        # print("Cropped image path:", file_path)
-        # print('uncropped image :', access_path)
+        print("Cropped image path:", file_path)
+        print('uncropped image :', access_path)
 
 
         product = Product(
             product_name = product_name,
             description = description,
             price = price,
-            images=images,
+            images=access_path,
             is_available = is_available,
             category = category,
             created_date = created_date,

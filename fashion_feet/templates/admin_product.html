@@ -76,11 +76,14 @@
 							<label>Price</label>
 							<input name="price" type="number" class="form-control" required>
 						</div>
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<label>Image</label>
 							<input name="images" type="file" id="images" class="form-control" required>
-						</div>
-					
+						</div> -->
+
+						<input name="images" type="file" id="images" class="form-control" required>
+							<img id="croppedImage" src="#" alt="Cropped Image" style="width: 300px; height: 100px;">
+
 						<div class="form-group">
 							<label>is_available</label>
 							<input name="is_available" type="text" class="form-control" required>
@@ -203,5 +206,6 @@
         </div>
     </div>
 </div>
+
 
 {% endblock %}

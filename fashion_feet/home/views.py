@@ -1,11 +1,15 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Product, Category, WishlistItem, CategoryOffer, Variation
+
+from orders.models import OrderProduct
+from .models import Product, Category, WishlistItem, CategoryOffer, Variation, ReviewRating
 from cart.models import CartItem
 from cart.views import _cart_id
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import F
 from django.http import JsonResponse
+from .forms import ReviewForm
+from django.contrib import messages
 # Create your views here.
 
 def home(request):
@@ -92,10 +96,18 @@ def view_prod(request, id):
     in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=product).exists()
 
 
-    # Pass the product data to the template
+    try:
+        orderproduct = OrderProduct.objects.filter(user = request.user, product_id = product.id).exists()
+    except OrderProduct.DoesNotExist:
+        orderproduct = None
+
+    reviews = ReviewRating.objects.filter(product_id=product.id, status=True)
+
     context = {
         'product': [product],
-        'in_cart' : in_cart
+        'in_cart' : in_cart,
+        'orderproduct' : orderproduct,
+        'reviews' : reviews,
     }
     return render(request, 'view_prod.html', context)
 
@@ -137,3 +149,26 @@ def wishlist(request):
     else:
         wishlist_items = None 
     return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
+
+def submit_review(request, product_id):
+    url = request.META.get('HTTP_REFERER')
+    if request.method == 'POST':
+        try:
+            reviews = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
+            form = ReviewForm(request.POST, instance=reviews)
+            form.save()
+            messages.success(request, 'Thankyou! Your review is updated')
+            return redirect(url)
+        except ReviewRating.DoesNotExist:
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                data = ReviewRating()
+                data.subject = form.cleaned_data['subject']
+                data.rating = form.cleaned_data['rating']
+                data.review = form.cleaned_data['review']
+                data.ip = request.META.get('REMOTE_ADDR')
+                data.product_id = product_id
+                data.user_id = request.user.id
+                data.save()
+                messages.success(request, 'Thankyou! Your review has been submitted')
+                return redirect(url)

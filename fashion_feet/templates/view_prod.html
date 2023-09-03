@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content%}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 
 #image-container {
@@ -8,7 +8,42 @@
   height: 300px; 
   overflow: auto;
 }
+.rating > input{
+    display: none;
+}
+.rating{
+	display: inline-block;;
+	border: 0;
+}
+.rating > label{
+	float: right;
+}
+.rating > label:before{
+	display: inline-block;
+	font-size:  1.1rem;
+	font-family: FontAwesome;
+	content: "\f005";
+	margin: 0;
+	padding: 0.3rem .2rem;
+	cursor: pointer;
+}
 
+.rating .half:before{
+	content: "\f089";
+	position: absolute;
+	padding-right: 0;
+}
+input:checked ~ label, label:hover ~ label{
+	color: #ffb503;
+}
+
+input:checked + label:hover, input:checked ~ label:hover,input:checked ~ label:hover ~ label,
+label:hover ~ input:checked ~ label{
+	color: #cc9000;
+}
+.star i{
+	color: #cc9000;
+}
 </style>
 
 
@@ -26,6 +61,7 @@
 		</div>
 
 {% for p in product %}
+<div>
 		<div class="colorlib-product">
 			<div class="container">
 				<div class="row row-pb-lg product-detail-wrap">
@@ -51,13 +87,12 @@
 								{% if p.new_price != p.price %}
 								<span style="color: red;">Offer Price : Rs {{p.new_price}}</span>
 								{% endif %}
-								<span class="rate">
-									<i class="icon-star-full"></i>
-									<i class="icon-star-full"></i>
-									<i class="icon-star-full"></i>
-									<i class="icon-star-full"></i>
-									<i class="icon-star-half"></i>
-									(74 Rating)
+								<span class="star">
+									<i class="fa fa-star{% if p.averageReview < 0.5 %}-o{% elif p.averageReview >= 0.5 and p.averageReview < 1 %}-half-o {% endif %}"></i>
+									<i class="fa fa-star{% if p.averageReview < 1.5 %}-o{% elif p.averageReview >= 1.5 and p.averageReview < 2 %}-half-o {% endif %}"></i>
+									<i class="fa fa-star{% if p.averageReview < 2.5 %}-o{% elif p.averageReview >= 2.5 and p.averageReview < 3 %}-half-o {% endif %}"></i>
+									<i class="fa fa-star{% if p.averageReview < 3.5 %}-o{% elif p.averageReview >= 3.5 and p.averageReview < 4 %}-half-o {% endif %}"></i>
+									<i class="fa fa-star{% if p.averageReview < 4.5 %}-o{% elif p.averageReview >= 4.5 and p.averageReview < 5 %}-half-o {% endif %}"></i>
 								</span>
 							</p>
 							<p>{{p.description}}</p>
@@ -108,161 +143,80 @@
 						</div>
 					</div>
 							
-{% endfor %}
-
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="row">
-							<div class="col-md-12 pills">
-								<div class="bd-example bd-example-tabs">
-								  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-								    <li class="nav-item">
-								      <a class="nav-link" id="pills-review-tab" data-toggle="pill" href="#pills-review" role="tab" aria-controls="pills-review" aria-expanded="true">Review</a>
-								    </li>
-								  </ul>
-
-								  <div class="tab-content" id="pills-tabContent">
-							
-
-								   
-
-								    <div class="tab-pane border fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
-								      <div class="row">
-								   		<div class="col-md-8">
-								   			<h3 class="head">23 Reviews</h3>
-								   			<div class="review">
-										   		<div class="user-img" style="background-image: url(images/person1.jpg)"></div>
-										   		<div class="desc">
-										   			<h4>
-										   				<span class="text-left">Jacob Webb</span>
-										   				<span class="text-right">14 March 2018</span>
-										   			</h4>
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-half"></i>
-										   					<i class="icon-star-empty"></i>
-									   					</span>
-									   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-										   			</p>
-										   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-										   		</div>
-										   	</div>
-										   	<div class="review">
-										   		<div class="user-img" style="background-image: url(images/person2.jpg)"></div>
-										   		<div class="desc">
-										   			<h4>
-										   				<span class="text-left">Jacob Webb</span>
-										   				<span class="text-right">14 March 2018</span>
-										   			</h4>
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-half"></i>
-										   					<i class="icon-star-empty"></i>
-									   					</span>
-									   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-										   			</p>
-										   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-										   		</div>
-										   	</div>
-										   	<div class="review">
-										   		<div class="user-img" style="background-image: url(images/person3.jpg)"></div>
-										   		<div class="desc">
-										   			<h4>
-										   				<span class="text-left">Jacob Webb</span>
-										   				<span class="text-right">14 March 2018</span>
-										   			</h4>
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-half"></i>
-										   					<i class="icon-star-empty"></i>
-									   					</span>
-									   					<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-										   			</p>
-										   			<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-										   		</div>
-										   	</div>
-								   		</div>
-								   		<div class="col-md-4">
-								   			<div class="rating-wrap">
-									   			<h3 class="head">Give a Review</h3>
-									   			<div class="wrap">
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					(98%)
-									   					</span>
-									   					<span>20 Reviews</span>
-										   			</p>
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-empty"></i>
-										   					(85%)
-									   					</span>
-									   					<span>10 Reviews</span>
-										   			</p>
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-empty"></i>
-										   					<i class="icon-star-empty"></i>
-										   					(70%)
-									   					</span>
-									   					<span>5 Reviews</span>
-										   			</p>
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-empty"></i>
-										   					<i class="icon-star-empty"></i>
-										   					<i class="icon-star-empty"></i>
-										   					(10%)
-									   					</span>
-									   					<span>0 Reviews</span>
-										   			</p>
-										   			<p class="star">
-										   				<span>
-										   					<i class="icon-star-full"></i>
-										   					<i class="icon-star-empty"></i>
-										   					<i class="icon-star-empty"></i>
-										   					<i class="icon-star-empty"></i>
-										   					<i class="icon-star-empty"></i>
-										   					(0%)
-									   					</span>
-									   					<span>0 Reviews</span>
-										   			</p>
-										   		</div>
-									   		</div>
-								   		</div>
-								   	</div>
-								    </div>
-								  </div>
-								</div>
-				         </div>
-						</div>
-					</div>
+				</div>
+<div class="row">
+<div class="col-md-6">
+	<form action="{% url 'submit_review' p.id%}" method="post">
+		{% csrf_token %}
+		<h4>Write your Review</h4>
+		<div>
+			<label>How do you rate this product?</label>
+			<br>
+			<div class="rating">
+				<input type="radio" name="rating" id="rating10" value="5" required><label for="rating10" title="5"></label>
+				<input type="radio" name="rating" id="rating9" value="4.5" required><label for="rating9" title="4.5" class="half"></label>
+				<input type="radio" name="rating" id="rating8" value="4" required><label for="rating8" title="4"></label>
+				<input type="radio" name="rating" id="rating7" value="3.5" required><label for="rating7" title="3.5" class="half"></label>
+				<input type="radio" name="rating" id="rating6" value="3" required><label for="rating6" title="3" ></label>
+				<input type="radio" name="rating" id="rating5" value="2.5" required><label for="rating5" title="2.5" class="half"></label>
+				<input type="radio" name="rating" id="rating4" value="2" required><label for="rating4" title="2" ></label>
+				<input type="radio" name="rating" id="rating3" value="1.5" required><label for="rating3" title="1.5" class="half"></label>
+				<input type="radio" name="rating" id="rating2" value="1" required><label for="rating2" title="1" ></label>
+				<input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
+			</div>
+			<br>
+			Review Title:
+			<input type="text" class="form-control" name="subject">
+			<br>
+			<textarea name="review" rows="4"></textarea>
+			<br>
+			{% if user.is_authenticated %}
+			{% if orderproduct %}
+			<input type="submit" class="btn btn-success" value="Submit Review">
+			{% else %}
+			<p style="color: #C62828;">You must purchase this product to post a review</p>
+			{% endif %}
+			{% else %}
+			<p style="color: #C62828;">You must be loggedin to post review</p>
+			{% endif %}
+		</div>
+		{% for message in messages %}
+        <h5 style="color: #C62828;">{{message}}</h5>
+        {% endfor %}
+	</form>
+</div>		
+<div class="col-md-1"></div>				      
+					
+		<div class="col-md-5">
+			<h3 class="head" style="color: #cc9000;">Customer Reviews</h3>
+			{% for review in reviews %}
+			<div class="pt-2 pl-5" style="background-color:whitesmoke">
+			<div class="review">
+				<div class="user-img" style="background-image: url(images/person2.jpg)"></div>
+				<div class="desc">
+					<h4>
+						<span class="text-left" style="color: rgb(56, 51, 153);">{{review.user.first_name}}</span>
+					</h4>
+						<span class="text-right">{{review.updated_at}}</span>
+					
+					<p class="star">
+						<span>
+							<i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}"></i>
+							<i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}"></i>
+							<i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}"></i>
+							<i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}"></i>
+							<i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}"></i>
+						</span>
+						<span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
+					</p>
+					<span style="font-weight: bold;">{{review.subject}}</span>
+					<p>{{review.review}}</p>
 				</div>
 			</div>
+			</div>
+			{% endfor %}
 		</div>
-
+</div>
+{% endfor %}
 {% endblock %}
 
