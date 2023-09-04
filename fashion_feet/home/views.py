@@ -95,10 +95,12 @@ def view_prod(request, id):
     product = get_object_or_404(Product, id=id)
     in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=product).exists()
 
-
-    try:
-        orderproduct = OrderProduct.objects.filter(user = request.user, product_id = product.id).exists()
-    except OrderProduct.DoesNotExist:
+    if request.user.is_authenticated:
+        try:
+            orderproduct = OrderProduct.objects.filter(user = request.user, product_id = product.id).exists()
+        except OrderProduct.DoesNotExist:
+            orderproduct = None
+    else:
         orderproduct = None
 
     reviews = ReviewRating.objects.filter(product_id=product.id, status=True)
