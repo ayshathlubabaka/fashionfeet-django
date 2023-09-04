@@ -22,7 +22,7 @@ import json
 def payments(request):
     body = json.loads(request.body)
     order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
-    print('payment')
+    
 
     payment = Payment(
         user = request.user,
@@ -102,7 +102,7 @@ def place_order(request, total=0, quantity = 0):
 
     if request.method == 'POST':
         selected_address = request.POST.get('address_option')
-        print('selected_address', selected_address)
+        
         if selected_address == 'new':
             form = OrderForm(request.POST)
             if form.is_valid():
@@ -161,58 +161,6 @@ def place_order(request, total=0, quantity = 0):
         data.order_number = order_number
         data.save()
 
-
-    # if request.method == 'POST':
-    #     form = OrderForm(request.POST)
-    #     print(form.errors)
-    #     if form.is_valid():
-    #         data = Order()
-    #         data.user = current_user
-    #         data.first_name = form.cleaned_data['first_name']
-    #         data.last_name = form.cleaned_data['last_name']
-    #         data.phone = form.cleaned_data['phone']
-    #         data.email = form.cleaned_data['email']
-    #         data.address_line_1 = form.cleaned_data['address_line_1']
-    #         data.address_line_2 = form.cleaned_data['address_line_2']
-    #         data.country = form.cleaned_data['country']
-    #         data.state = form.cleaned_data['state']
-    #         data.city = form.cleaned_data['city']
-    #         data.order_note = form.cleaned_data['order_note']
-    #         data.order_total = total
-    #         data.delivery_charge = delivery_charge
-
-
-    #         selected_offer = request.POST.get('selected_offer') 
-
-    #         if selected_offer:
-    #             offer_discount = request.POST.get(f'{selected_offer}_discount')
-    #             offer_discount = float(offer_discount)
-    #         else:
-    #             offer_discount = 0
-    #         print('offer_discount :', offer_discount)
-            
-    #         coupon_code = request.POST.get('coupon_code')
-    #         try:
-    #             coupon = Coupon.objects.get(coupon_code=coupon_code, is_expired=False)
-    #             coupon_discount = coupon.discount_price
-    #         except Coupon.DoesNotExist:
-    #             pass
-
-    #         data.offer_discount = offer_discount
-    #         data.coupon_discount = coupon_discount
-    #         data.ip = request.META.get('REMOTE_ADDR')
-    #         data.save()
-            
-    #         yr = int(datetime.date.today().strftime('%Y'))
-    #         dt = int(datetime.date.today().strftime('%d'))
-    #         mt = int(datetime.date.today().strftime('%m'))
-    #         d = datetime.date(yr, mt, dt)
-    #         current_date = d.strftime("%Y%m%d")
-    #         order_number = current_date + str(data.id)
-    #         data.order_number = order_number
-    #         data.save()
-        
-        print('user :',request.user)
         discount = coupon_discount + offer_discount
         grand_total = total + delivery_charge - discount
 
@@ -236,7 +184,7 @@ def place_order(request, total=0, quantity = 0):
     return render(request, 'checkout.html', {'form': form, 'total': total, 'quantity': quantity, 'user_profile' : user_profile})
 
 def order_complete(request):
-    print('order_complete')
+    
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')
 

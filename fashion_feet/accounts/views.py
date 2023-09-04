@@ -135,9 +135,9 @@ def login(request):
             url = request.META.get('HTTP_REFERER')
             try:
                 query = requests.utils.urlparse(url).query
-                print('query=',query)
+                
                 params = dict(x.split('=')for x in query.split('&'))
-                print(params)
+                
                 if 'next' in params:
                     nextpage = params['next']
                     return redirect(nextpage)
@@ -266,16 +266,15 @@ def edit_profile(request):
 @login_required(login_url='/login')
 def my_orders(request):
 
-    print(request.user)
+    
 
     orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
-    print(orders)
+   
     context = {
         'orders' : orders,
 
     }
-    for order in orders:
-        print(order.order_number)
+        
     return render(request, 'my_orders.html', context)
 
 def cancel_order(request, order_id):
@@ -362,7 +361,7 @@ def wallet(request):
             'balance': balance,
             'transaction' : transaction
         }
-        print('balance', balance)
+        
         return render(request, 'wallet.html', context)
     except Wallet.DoesNotExist:
         return render(request, 'wallet.html')

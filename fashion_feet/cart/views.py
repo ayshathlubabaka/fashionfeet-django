@@ -1,11 +1,9 @@
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from home.models import Variation, Product, MinimumPurchaseOffer, CategoryOffer
 from .models import Cart, CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.template.loader import render_to_string
 from accounts.models import UserProfile
 # Create your views here.
 
@@ -56,7 +54,7 @@ def add_cart(request, product_id):
                     item = CartItem.objects.get(product=product, id=item_id)
                     item.quantity += 1
                     for variation in product_variation:
-                        print(variation.stock)
+                        
                         if variation.stock < item.quantity:
                             response_data = {
                                 'error': 'Some variations are out of stock.',
@@ -162,7 +160,6 @@ def add_cart(request, product_id):
                 if len(product_variation)>0:
                     item.variations.clear()
                     item.variations.add(*product_variation)
-                print('not exists')
                 item.save()
                 quantity = item.quantity
                 sub_total = item.product.price * quantity
@@ -291,9 +288,20 @@ def cart(request, total=0, delivery_charge=0,cart_items=None):
 def checkout(request, total=0, quantity=0, delivery_charge = 0, grand_total = 0, cart_items=None):
 
     user_profile = get_object_or_404(UserProfile, user = request.user)
-    cat_offer = CategoryOffer.objects.filter().first()
-    min_offer = MinimumPurchaseOffer.objects.filter().first()
-    min_discount_per = min_offer.discount_percentage
+    try:
+        cat_offer = CategoryOffer.objects.first()
+    except CategoryOffer.DoesNotExist:
+        cat_offer = None 
+
+    try:
+        min_offer = MinimumPurchaseOffer.objects.first()
+    except MinimumPurchaseOffer.DoesNotExist:
+        min_offer = None  
+
+    if min_offer:
+        min_discount_per = min_offer.discount_percentage
+    else:
+        min_discount_per = 0
     discount_price = 0
     try:
         if request.user.is_authenticated:
@@ -302,7 +310,6 @@ def checkout(request, total=0, quantity=0, delivery_charge = 0, grand_total = 0,
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active = True)
         for cart_item in cart_items:
-            print(cart_item.product.new_price)
             total += (cart_item.product.price * cart_item.quantity)
             if cart_item.product.new_price is not None and cart_item.product.new_price > 0:
                 discount_price += (cart_item.product.new_price * cart_item.quantity)

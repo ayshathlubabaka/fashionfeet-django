@@ -39,7 +39,7 @@ def admin_login(request):
             auth.login(request, user)
             return redirect('admin_dash')
         else:
-            print('invalid credentials')
+            
             messages.info(request, 'invalid credentials')
             return redirect('admin_login')
     
@@ -371,10 +371,6 @@ def add_prod(request):
             print(f"Error saving the cropped image: {e}")
 
         access_path = file_path.replace('media' + os.sep, '', 1)
-
-     
-        print("Cropped image path:", file_path)
-        print('uncropped image :', access_path)
 
 
         product = Product(

@@ -123,7 +123,7 @@ def search(request):
 
     if keyword:
         products = Product.objects.order_by('-created_date').filter(product_name__icontains=keyword)
-        print(products)
+        
     else:
         products = []  
 
