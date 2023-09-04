@@ -1,19 +1,14 @@
 import datetime
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from cart.models import CartItem
 from .models import Order, OrderProduct, Payment
 from .forms import OrderForm
-from django.db import transaction
-from django.contrib import messages
-from home.models import Product,Coupon, CategoryOffer, MinimumPurchaseOffer
-from accounts.models import UserProfile, Wallet
 
-from django.contrib.sites.shortcuts import get_current_site
+from home.models import Coupon
+from accounts.models import UserProfile
+
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 import json
 # Create your views here.
@@ -35,8 +30,6 @@ def payments(request):
     payment.save()
     order.payment = payment
     
-    # order_number = request.session.get('order_number')
-    # order = Order.objects.get(user=request.user, is_ordered = False, order_number=order_number)
     order.is_ordered = True
     order.save()
 

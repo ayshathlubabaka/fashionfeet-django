@@ -287,7 +287,15 @@ def cart(request, total=0, delivery_charge=0,cart_items=None):
 @login_required(login_url='login')
 def checkout(request, total=0, quantity=0, delivery_charge = 0, grand_total = 0, cart_items=None):
 
-    user_profile = get_object_or_404(UserProfile, user = request.user)
+    
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+        if user_profile.address_line_1:
+            print('full adrees')
+        else:
+            print('no full_address')
+    except UserProfile.DoesNotExist:
+        user_profile = None
     try:
         cat_offer = CategoryOffer.objects.first()
     except CategoryOffer.DoesNotExist:

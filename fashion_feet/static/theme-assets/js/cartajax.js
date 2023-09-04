@@ -5,8 +5,8 @@ $(document).ready(function() {
             url: '/cart/', 
             method: 'GET',
             success: function(response) {
-				console.log('total', response.total)
-				console.log('discount', response.discount)
+				// console.log('total', response.total)
+				// console.log('discount', response.discount)
 				$('#total').text(response.total);
                 $('#delivery-charge').text(response.delivery_charge);
                 $('#grand-total').text(response.grand_total);
@@ -40,8 +40,6 @@ $(document).ready(function() {
                 quantityElement.text(updatedQuantity);
 				subtotalElement.text(updatedSubtotal);
 				updateCartData();
-				console.log('Updated Quantity:', updatedQuantity);
-				console.log('Updated Subtotal:', updatedSubtotal);
             }
 		}
         });
@@ -63,7 +61,7 @@ $(document).ready(function() {
             method: 'GET', // or 'POST' depending on your server implementation
             data: formData,
             success: function(response) {
-				console.log(response.quantity)
+				// console.log(response.quantity)
                 var updatedQuantity = response.quantity;
                 var updatedSubtotal = response.sub_total;
                 if (updatedQuantity < 1){
@@ -74,7 +72,7 @@ $(document).ready(function() {
                 subtotalElement.text(updatedSubtotal);
 				}
 				updateCartData();
-                console.log('Quantity and Subtotal updated successfully.');
+                // console.log('Quantity and Subtotal updated successfully.');
             },
             error: function(error) {
                 console.error('An error occurred:', error);
@@ -96,7 +94,7 @@ $(document).ready(function() {
                 // Handle UI update based on the response
                 cartItemContainer.remove(); // Remove the cart item container from the DOM
                 updateCartData();
-                console.log('Cart item removed successfully.');
+                // console.log('Cart item removed successfully.');
             },
             error: function(error) {
                 console.error('An error occurred:', error);

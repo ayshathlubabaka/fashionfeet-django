@@ -26,9 +26,13 @@
 							<input type="radio" id="existing" name="address_option" value="existing" checked>
 
 							<label for="existing">
-								
-								Select Address
+								{% if user_profile %}
+								   {% if user_profile.address_line_1 %}
 									
+								Select Address
+
+								<br>
+								<span style="color: red;">Confirm You entered Full Address Before Proceeding</span>
 								<div class="container">
 									<div class="card mb-3">
 										<div class="card-body">
@@ -42,8 +46,10 @@
 										</div>
 									</div>
 								</div>
-								
-						
+								   {% endif %}
+								{% else %}
+								<div>Your profile is not complete <a href="{% url 'edit_profile' %}" style="color: blue;"> Go and Add your profile</a></div>
+								{% endif %}
 							</label>
 							
 							
@@ -209,17 +215,7 @@
 							</div>
 						</div>
 
-						<!-- <div class="col-md-12">
-							<div class="cart-detail border border-danger">
-								<h2>Payment Method</h2>
-								<div class="form-group">
-									<div class="radio">
-										<label><input type="radio" name="payment_method"><img src="/static/theme-assets/images/paypal.png"> Paypal</label>
-									</div>
-								</div>
-							</div>
-							
-						</div> -->
+						
 
 						<div class="col-lg-12">
 							<div class="row">
