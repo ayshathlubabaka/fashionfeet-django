@@ -35,7 +35,7 @@
                             <td id="status-{{ order.id }}">{{ order.status }}</td>
                             <td>
                               {% if order.status != 'Cancelled' %}
-                              <form class="cancel-order-form" data-order-id="{{ order.id }}" data-cancel-url="{% url 'cancel_order' order.id %}">
+                              <form action="{% url 'cancel_order' order.id %}" method="POST">
                                 {% csrf_token %}
                                 <button type="submit" class="cancel-order-btn" style="background-color: red;">Cancel</button>
                               </form>

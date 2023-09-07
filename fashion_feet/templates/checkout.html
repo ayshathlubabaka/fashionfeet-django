@@ -26,12 +26,11 @@
 							<input type="radio" id="existing" name="address_option" value="existing" checked>
 
 							<label for="existing">
-								{% if user_profile %}
-								   {% if user_profile.address_line_1 %}
 									
 								Select Address
 
 								<br>
+								{% if user_profile and user_profile.address_line_1 %}
 								<span style="color: red;">Confirm You entered Full Address Before Proceeding</span>
 								<div class="container">
 									<div class="card mb-3">
@@ -46,7 +45,6 @@
 										</div>
 									</div>
 								</div>
-								   {% endif %}
 								{% else %}
 								<div>Your profile is not complete <a href="{% url 'edit_profile' %}" style="color: blue;"> Go and Add your profile</a></div>
 								{% endif %}

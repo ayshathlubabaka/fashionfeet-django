@@ -532,12 +532,16 @@ def admin_order_detail(request, order_id):
     order_detail = OrderProduct. objects.filter(order__order_number=order_id)
     order = Order.objects.get(order_number = order_id)
     sub_total = 0
+    delivery_charge = order.delivery_charge
+    discount = order.offer_discount+order.coupon_discount
     for i in order_detail:
         sub_total += i.product_price * i.quantity
+    grand_total = sub_total + delivery_charge - discount
     context = {
         'order_detail' : order_detail,
         'order' : order,
         'subtotal': sub_total,
+        'grand_total' : grand_total,
     }
     return render(request, 'admin_order_detail.html', context)
 

@@ -266,27 +266,25 @@ def edit_profile(request):
 @login_required(login_url='/login')
 def my_orders(request):
 
-    
-
     orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
-   
     context = {
         'orders' : orders,
-
-    }
-        
+    }   
     return render(request, 'my_orders.html', context)
 
 def cancel_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
+    
     if request.method == 'POST':
         order.status = 'Cancelled'
         order.save()
-        response_data = {
-            'message': 'Order cancelled successfully'
-        }
-        return JsonResponse(response_data)
-    return JsonResponse({'message': 'Invalid request'})
+        try:
+            wallet = Wallet.objects.get(user=request.user)
+            amount = Decimal(order.order_total)
+            wallet.add_funds(amount)
+        except Wallet.DoesNotExist:
+            pass
+    return redirect('my_orders')
 
 @login_required(login_url='login')
 def change_password(request):
@@ -315,12 +313,17 @@ def order_detail(request, order_id):
     order_detail = OrderProduct. objects.filter(order__order_number=order_id)
     order = Order.objects.get(order_number = order_id)
     sub_total = 0
+    delivery_charge = order.delivery_charge
+    discount = order.offer_discount+order.coupon_discount
     for i in order_detail:
         sub_total += i.product_price * i.quantity
+    grand_total = sub_total + delivery_charge - discount
+    print(grand_total)
     context = {
         'order_detail' : order_detail,
         'order' : order,
         'subtotal': sub_total,
+        'grand_total' : grand_total
     }
     return render(request, 'order_detail.html', context)
 

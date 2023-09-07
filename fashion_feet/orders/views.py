@@ -75,8 +75,10 @@ def payments(request):
 
 
 def place_order(request, total=0, quantity = 0):
-
-    user_profile = UserProfile.objects.get(user = request.user)
+    try:
+        user_profile = UserProfile.objects.get(user = request.user)
+    except UserProfile.DoesNotExist:
+        pass
     data = Order()
 
     current_user = request.user
@@ -122,7 +124,7 @@ def place_order(request, total=0, quantity = 0):
             data.state = user_profile.state
             data.country = user_profile.country
 
-        data.order_total = total
+        
         data.delivery_charge = delivery_charge
 
         selected_offer = request.POST.get('selected_offer') 
@@ -142,6 +144,7 @@ def place_order(request, total=0, quantity = 0):
 
         data.offer_discount = offer_discount
         data.coupon_discount = coupon_discount
+        data.order_total = total + data.delivery_charge - (data.offer_discount + data.coupon_discount)
         data.ip = request.META.get('REMOTE_ADDR')
         data.save()
 
@@ -168,8 +171,6 @@ def place_order(request, total=0, quantity = 0):
             'grand_total' : grand_total,
             'coupon_code': coupon_code,
             'user_profile' : user_profile
-            
-            
         }
         request.session['order_number'] = order_number
         return render(request, 'payments.html' , context)
@@ -185,12 +186,14 @@ def order_complete(request):
         order = Order.objects.get(order_number=order_number, is_ordered=True)
         ordered_products = OrderProduct.objects.filter(order_id = order.id)
         payment = Payment.objects.get(payment_id=transID)
-
+        discount = 0
         subtotal = 0
         for i in ordered_products:
             subtotal += i.product_price * i.quantity
-
-        grand_total = subtotal+order.delivery_charge-(order.offer_discount +order.coupon_discount)
+        
+        discount = (order.offer_discount + order.coupon_discount)
+        
+        grand_total = subtotal+order.delivery_charge-(discount)
 
         context = {
             'order' : order,
