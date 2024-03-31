@@ -25,8 +25,9 @@
         <p class="message">Already registered? <a href="{% url 'login' %}">Login Here</a></p>
 
         {% for message in messages %}
-        <h5 style="color: #C62828;">{{message}}</h5>
+        <h5 style="color: #3828c6;">{{message}}</h5>
         {% endfor %}
+        <h5 style="color: #c6282b;">{{error_message}}</h5>
       </form>
     </div>
   </div>

@@ -170,7 +170,7 @@ def place_order(request, total=0, quantity = 0):
             'coupon_discount' : coupon_discount,
             'grand_total' : grand_total,
             'coupon_code': coupon_code,
-            'user_profile' : user_profile
+            'user_profile' : user_profile if user_profile else None
         }
         request.session['order_number'] = order_number
         return render(request, 'payments.html' , context)
@@ -194,6 +194,7 @@ def order_complete(request):
         discount = (order.offer_discount + order.coupon_discount)
         
         grand_total = subtotal+order.delivery_charge-(discount)
+
 
         context = {
             'order' : order,

@@ -2,12 +2,10 @@ from django import forms
 from .models import Account, UserProfile
 
 class Registrationform(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder' : 'Enter Password'
-    }))
+    referral_code = forms.CharField(required=False)
     class Meta:
         model = Account
-        fields = ['first_name', 'last_name', 'phone_number', 'password']
+        fields = ['first_name', 'last_name', 'email', 'username', 'phone_number', 'password']
 
 class UserForm(forms.ModelForm):
     class Meta:

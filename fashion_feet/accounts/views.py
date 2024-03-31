@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from orders.models import OrderProduct
-from .forms import UserForm, UserProfileForm
+from .forms import UserForm, UserProfileForm, Registrationform
 from .models import Account, UserProfile, ReferralCode, Referral, Wallet, Transaction
 from django.contrib.auth import authenticate, login as user_login, logout
 import requests
@@ -24,7 +24,7 @@ from django.core.mail import EmailMessage
 
 
 def register(request):
-     if request.method == 'POST':
+    if request.method == 'POST':
         
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -39,6 +39,16 @@ def register(request):
         if password != confirm_password:
             error_message = "Passwords do not match"
             return render(request, 'register.html', {'error_message': error_message})
+        
+        if Account.objects.filter(email=email).exists():
+            error_message = "Email already exists"
+            return render(request, 'register.html', {'error_message': error_message})
+        
+        
+        if Account.objects.filter(username=username).exists():
+            error_message = "Username already exists"
+            return render(request, 'register.html', {'error_message': error_message})
+        
         
         
         user = Account.objects.create_user(username=username,first_name=first_name, last_name=last_name, email=email, password=password)
@@ -82,7 +92,7 @@ def register(request):
         
         return redirect('register')
      
-     return render(request, 'register.html')
+    return render(request, 'register.html')
 
 def login(request):
     if request.method == 'POST':

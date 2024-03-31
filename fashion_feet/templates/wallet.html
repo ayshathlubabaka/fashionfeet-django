@@ -11,13 +11,6 @@
         <p  style="font-weight: bold; color: red;">Rs. {{balance}}</p>
       </div>
     </div>
-      <form action="/accounts/add_money_to_wallet/" method="POST">
-        {% csrf_token %}
-      <div class="buttons text-center mt-5">
-        <input name="amount" type="text" placeholder="Enter amount">
-        <button type="submit" class="btn" style="background-color: #88c8bc;">Add Funds</button>
-      </div>
-    </form>
     
   </div>
     </div>
