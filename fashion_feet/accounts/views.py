@@ -259,7 +259,7 @@ def edit_profile(request):
            profile_form = UserProfileForm(instance=userprofile)
 
     try:
-        referral_code = request.user.referralcode  # Assuming the related_name is set to 'referralcode' in the ReferralCode model
+        referral_code = request.user.referralcode
         code = referral_code.code
     except:
         code = None

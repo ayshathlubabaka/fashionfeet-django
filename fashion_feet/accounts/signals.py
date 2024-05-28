@@ -7,5 +7,5 @@ import shortuuid
 def create_referral_code(sender, instance, created, **kwargs):
     if created:
         referral_code = ReferralCode.objects.create(user=instance)
-        referral_code.code = shortuuid.uuid()[:8]  # Generate a unique 8-character code
+        referral_code.code = shortuuid.uuid()[:8]  
         referral_code.save()

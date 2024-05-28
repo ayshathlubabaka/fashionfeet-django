@@ -59,17 +59,16 @@ def sales_report(request):
     
     total_sales = Order.objects.filter(is_ordered=True).aggregate(total_sales=Sum('order_total'))['total_sales']
 
-    # Revenue Breakdown by Category
     category_sales = Category.objects.annotate(sales_revenue=Sum('product__orderproduct__product_price'))
 
-    # Sales by Product
     product_sales = Product.objects.annotate(sales_revenue=Sum('orderproduct__product_price'))
 
-    # Sales by Day
     start_date = date.today() - timedelta(days=7)
+
     daily_sales = Order.objects.filter(is_ordered=True, created_at__gte=start_date).values('created_at__date').annotate(daily_sales=Sum('order_total')).order_by('-created_at__date')
-    # Increase in Order Percentage
+    
     previous_day_sales = Order.objects.filter(is_ordered=True, created_at__date=start_date - timedelta(days=1)).aggregate(previous_day_sales=Sum('order_total'))['previous_day_sales']
+    
     increase_percentage = ((decimal.Decimal(total_sales) - decimal.Decimal(previous_day_sales)) / decimal.Decimal(previous_day_sales)) * 100 if previous_day_sales else 0
 
     orders = Order.objects.all()
@@ -96,10 +95,10 @@ def admin_dash(request):
     
     total_sales = Order.objects.filter(is_ordered=True).aggregate(total_sales=Sum('order_total'))['total_sales']
 
-    # Retrieve revenue breakdown by category
+    
     category_sales = Category.objects.annotate(sales_revenue=Sum('product__orderproduct__product_price')).values('category_name', 'sales_revenue')
 
-    # Convert category_sales to a list of dictionaries
+    
     category_sales_list = []
     for category_sale in category_sales:
         category_sale_dict = {
@@ -108,14 +107,13 @@ def admin_dash(request):
         }
         category_sales_list.append(category_sale_dict)
 
-    # Retrieve sales by product
+
     product_sales = Product.objects.annotate(sales_revenue=Sum('orderproduct__product_price')).values('product_name', 'sales_revenue')
 
-    # Retrieve sales by day
     start_date = date.today() - timedelta(days=7)
     daily_sales = Order.objects.filter(is_ordered=True, created_at__gte=start_date).values('created_at__date').annotate(daily_sales=Sum('order_total')).order_by('created_at__date')
 
-    # Convert daily_sales dates to strings
+
     daily_sales_list = []
     for daily_sale in daily_sales:
         daily_sale_dict = {
@@ -151,17 +149,13 @@ class ViewPDF(View):
         orders = Order.objects.all()
         total_sales = Order.objects.filter(is_ordered=True).aggregate(total_sales=Sum('order_total'))['total_sales']
 
-        # Revenue Breakdown by Category
         category_sales = Category.objects.annotate(sales_revenue=Sum('product__orderproduct__product_price'))
 
-        # Sales by Product
         product_sales = Product.objects.annotate(sales_revenue=Sum('orderproduct__product_price'))
 
-        # Sales by Day
         start_date = date.today() - timedelta(days=7)
         daily_sales = Order.objects.filter(is_ordered=True, created_at__gte=start_date).values('created_at__date').annotate(daily_sales=Sum('order_total')).order_by('-created_at__date')
 
-        # Increase in Order Percentage
         previous_day_sales = Order.objects.filter(is_ordered=True, created_at__date=start_date - timedelta(days=1)).aggregate(previous_day_sales=Sum('order_total'))['previous_day_sales']
         increase_percentage = ((decimal.Decimal(total_sales) - decimal.Decimal(previous_day_sales)) / decimal.Decimal(previous_day_sales)) * 100 if previous_day_sales else 0
 
